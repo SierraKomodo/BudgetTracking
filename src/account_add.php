@@ -17,7 +17,7 @@ function renderAccountAdd(): string
     $form->addField(AccountType::toOptionsSelect("account_type", "Account Type", TRUE));
     $form->addSection("Credit");
     $form->addField(new InputMoney("limit", "Credit Limit"));
-    $form->addField(new InputMoney("minimum-payment", "Minimum Monthly Payment"));
+    $form->addField(new InputMoney("minimum_payment", "Minimum Monthly Payment"));
     $form->addField(new InputMoney("rewards", "Rewards"));
     return $form->render();
 }
