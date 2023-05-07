@@ -1,0 +1,23 @@
+{
+  "name": "sierrakomodo/budgettracking",
+  "description": "A simplistic PHP driven budget and finance tracking app.",
+  "require": {
+    "ext-pdo": "*",
+    "php": ">=8.2",
+    "symfony/dotenv": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "SierraKomodo\\BudgetTracking\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Sierra \"Komodo\" Brown",
+      "email": "sierrakomodo@hey.com",
+      "homepage": "https://linktr.ee/SierraKomodo",
+      "role": "Developer"
+    }
+  ],
+  "license": "AGPL-3.0-or-later"
+}
