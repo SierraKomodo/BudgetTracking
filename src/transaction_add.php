@@ -2,7 +2,6 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-use PDO;
 use SierraKomodo\BudgetTracking\Bootstrap\Form;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputDate;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputNumber;
@@ -15,10 +14,13 @@ require_once('database.php');
 
 function renderAddTransaction(): string
 {
-    global $database;
+    global $conn;
 
     // Fetch and compile data
-    $accounts = $database->query("SELECT * FROM `accounts`;")->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $accounts = $conn->fetchAllAssociative("
+        SELECT *
+        FROM `accounts`;
+    ");
     $accountSelectGroup = [];
     foreach ($accounts as $account) {
         $accountSelectGroup[$account["id"]] = $account["name"];

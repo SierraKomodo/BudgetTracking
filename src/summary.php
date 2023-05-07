@@ -18,25 +18,7 @@ require_once('common.php');
  */
 function renderSummary(): string
 {
-    global $database;
-
-    // Database & Statements
-    $transactionStmt = $database->prepare("
-        SELECT * FROM `transactions`
-            WHERE `account` = :account;
-    ");
-    $transferStmt = $database->prepare("
-        SELECT * FROM `transactions`
-            WHERE `dest_account` = :dest_account;
-    ");
-    $accountCreditStmt = $database->prepare("
-        SELECT * FROM `accounts_credit`
-            WHERE `id` = :id;
-    ");
-    $reserveStmt = $database->prepare("
-        SELECT * FROM `reserves`
-            WHERE `account` = :account;
-    ");
+    global $conn;
 
     // Common function vars
     $summaryCash = 0;
@@ -60,21 +42,42 @@ function renderSummary(): string
     $accountTypeStatusTotals["credit_payments"] = 0;
 
     // Fetch and compile data
-    $accounts = $database->query("SELECT * FROM `accounts`;")->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $accounts = $conn->fetchAllAssociative("
+        SELECT *
+        FROM `accounts`;
+    ");
     foreach ($accounts as $account) {
         $account["account_type"] = AccountType::from($account["account_type"]);
-        $transactionStmt->execute([
-            ":account" => $account["id"],
-        ]);
-        $account["transactions"] = $transactionStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        $transferStmt->execute([
-            ":dest_account" => $account["id"],
-        ]);
-        $account["transfers"] = $transferStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        $reserveStmt->execute([
-            ":account" => $account["id"],
-        ]);
-        $account["reserves"] = $reserveStmt->fetchAll(PDO::FETCH_ASSOC);
+        $account["transactions"] = $conn->fetchAllAssociative(
+            "
+                SELECT *
+                FROM `transactions`
+                WHERE `account` = :account;
+            ",
+            [
+                "account" => $account["id"]
+            ]
+        );
+        $account["transfers"] = $conn->fetchAllAssociative(
+            "
+                SELECT *
+                FROM `transactions`
+                WHERE `dest_account` = :dest_account;
+            ",
+            [
+                "dest_account" => $account["id"]
+            ]
+        );
+        $account["reserves"] = $conn->fetchAllAssociative(
+            "
+                SELECT *
+                FROM `reserves`
+                WHERE `account` = :account;
+            ",
+            [
+                "account" => $account["id"]
+            ]
+        );
         $account["total_planned"] = 0;
         $account["total_pending"] = 0;
         $account["total_processed"] = 0;
@@ -111,10 +114,16 @@ function renderSummary(): string
                 break;
             case AccountType::Credit:
                 $summaryCredit += $account["total_expected"];
-                $accountCreditStmt->execute([
-                    ":id" => $account["id"],
-                ]);
-                $account["credit"] = $accountCreditStmt->fetch(PDO::FETCH_ASSOC);
+                $account["credit"] = $conn->fetchAssociative(
+                    "
+                        SELECT *
+                        FROM `accounts_credit`
+                        WHERE `id` = :id;
+                    ",
+                    [
+                        "id" => $account["id"],
+                    ]
+                );
                 $account["credit"]["available"] = $account["credit"]["limit"] + $account["total_processed"];
                 $account["credit"]["expected_available"] = $account["credit"]["limit"] + $account["total_expected"];
                 $account["credit"]["usage"] = round(abs($account["total_processed"]) / $account["credit"]["limit"] * 100, 2);
@@ -136,7 +145,7 @@ function renderSummary(): string
         $accountTypeStatusTotals["credit_usage"] = round(abs($accountTypeStatusTotals["credit_expected"]) / $accountTypeStatusTotals["credit_limit"] * 100, 2);
     }
 
-        /* Cash Available */
+    /* Cash Available */
     $availableTable = "
         <h2>Overview</h2>
         <table class='table table-sm table-striped table-hover'>

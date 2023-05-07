@@ -3,7 +3,6 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-use PDO;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 
 require_once('database.php');
@@ -12,22 +11,7 @@ require_once('common.php');
 
 function renderTransactionList(int $accountId): string
 {
-    global $database;
-
-
-    // Database & Statements
-    $accountStmt = $database->prepare("
-        SELECT `name` FROM `accounts`
-            WHERE `id` = :id;
-    ");
-    $transactionStmt = $database->prepare("
-        SELECT * FROM `transactions`
-            WHERE `account` = :account;
-    ");
-    $transferStmt = $database->prepare("
-        SELECT * FROM `transactions`
-            WHERE `dest_account` = :dest_account;
-    ");
+    global $conn;
 
 
     // Common vars
@@ -35,21 +19,45 @@ function renderTransactionList(int $accountId): string
 
 
     // Fetch and compile data
-    $accountStmt->execute([":id" => $accountId]);
-    $account = $accountStmt->fetch(PDO::FETCH_ASSOC);
+    $account = $conn->fetchAssociative(
+        "
+            SELECT `name`
+            FROM `accounts`
+            WHERE `id` = :id;
+        ",
+        [
+            "id" => $accountId,
+        ]
+    );
 
-    $transactionStmt->execute([":account" => $accountId]);
-    $transactions = $transactionStmt->fetchAll(PDO::FETCH_ASSOC);
+    $transactions = $conn->fetchAllAssociative(
+        "
+            SELECT *
+            FROM `transactions`
+            WHERE `account` = :account;
+        ",
+        [
+            "account" => $accountId,
+        ]
+    );
 
-    $transferStmt->execute([":dest_account" => $accountId]);
-    $transfers = $transferStmt->fetchAll(PDO::FETCH_ASSOC);
+    $transfers = $conn->fetchAllAssociative(
+        "
+            SELECT *
+            FROM `transactions`
+            WHERE `dest_account` = :dest_account;
+        ",
+        [
+            "dest_account" => $accountId,
+        ]
+    );
 
     foreach ($transfers as $transfer) {
         $transfer["amount"] = -$transfer["amount"];
         $transactions[] = $transfer;
     }
 
-    foreach($transactions as $transaction) {
+    foreach ($transactions as $transaction) {
         $transaction["status"] = TransactionStatus::from($transaction["status"]);
         $amountTotal += $transaction["amount"];
     }

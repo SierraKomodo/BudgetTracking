@@ -13,10 +13,13 @@ require_once('database.php');
 
 function renderReserveAdd(): string
 {
-    global $database;
+    global $conn;
 
     // Fetch and compile data
-    $accounts = $database->query("SELECT * FROM `accounts`;")->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $accounts = $conn->fetchAllAssociative("
+        SELECT *
+        FROM `accounts`;
+    ");
     $accountSelectGroup = [];
     foreach ($accounts as $account) {
         $accountSelectGroup[$account["id"]] = $account["name"];
