@@ -95,6 +95,20 @@ abstract class FormField
         unset($this->attributes[$attribute]);
     }
 
+    /**
+     * Fetches the value of the given attribute.
+     *
+     * @param string $attribute
+     * @return string|null
+     */
+    public function getAttribute(string $attribute): ?string
+    {
+        if (!isset($this->attributes[$attribute])) {
+            return null;
+        }
+        return $this->attributes[$attribute];
+    }
+
     public function getAttributes(): array
     {
         return $this->attributes;
