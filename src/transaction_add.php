@@ -4,7 +4,7 @@ namespace SierraKomodo\BudgetTracking;
 
 use SierraKomodo\BudgetTracking\Bootstrap\Form;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputDate;
-use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputNumber;
+use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputMoney;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputText;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Options\OptionsSelect;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
@@ -33,7 +33,7 @@ function renderAddTransaction(): string
     $form->addField(new OptionsSelect("dest_account", "Destination Account", options: $accountSelectGroup));
     $form->addField(new InputText("destination", "Destination"));
     $form->addField(new InputText("desc", "Description"));
-    $form->addField(new InputNumber("amount", "Amount", TRUE));
+    $form->addField(new InputMoney("amount", "Amount", TRUE));
     $form->addField(TransactionStatus::toOptionsSelect("status", "Status", TRUE));
     return $form->render();
 }
