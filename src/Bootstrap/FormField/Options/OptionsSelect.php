@@ -15,7 +15,7 @@ class OptionsSelect extends Options
         $attributesRendered = $this->_renderAttributes();
 
         // Options & Default Option
-        $optionsRendered = "";
+        $optionsRendered = "<option></option>";
         foreach ($this->getOptions() as $id => $label) {
             $selected = null;
             if ($this->getDefaultValue() == $id) {
