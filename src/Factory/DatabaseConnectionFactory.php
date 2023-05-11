@@ -2,10 +2,13 @@
 
 namespace SierraKomodo\BudgetTracking\Factory;
 
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\ORMSetup;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 
 /**
  * Static factory to instantiate a {@link Connection} connection, or return an existing connection if already
@@ -22,12 +25,19 @@ class DatabaseConnectionFactory
     /**
      * Retrieves a cached instance of {@link Connection}, creating one if it doesn't already exist.
      *
+     * @param Configuration|null $config
      * @return Connection|false
-     * @throws Exception
+     * @throws Exception from {@link DriverManager::getConnection()}
+     * @throws RuntimeException if connection has not yet been instantiated by {@link EntityManagerFactory}.
      */
-    public static function getConnection(): Connection|false
+    public static function getConnection(?Configuration $config = null): Connection|false
     {
         if (empty(self::$connection)) {
+            if (!$config) {
+                throw new RuntimeException(
+                    "Attempted to access an uninstantiated database connection without a valid config. Connection must be instantiated with the EntityManagerFactory before use."
+                );
+            }
             self::$connection = DriverManager::getConnection(self::getDriverParams());
         }
         return self::$connection;

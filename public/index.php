@@ -2,11 +2,16 @@
 
 namespace SierraKomodo\BudgetTracking;
 
+use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
+
 require_once('../vendor/autoload.php');
 
 require_once('../src/environment.php');
 require_once('../src/render_html.php');
 $htmlOut = "";
+
+
+$entityManager = EntityManagerFactory::getEntityManager();
 
 
 if (!empty($_POST)) {
