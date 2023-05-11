@@ -5,7 +5,8 @@
     "ext-pdo": "*",
     "php": ">=8.2",
     "symfony/dotenv": "^6.2",
-    "doctrine/orm": "^2.15"
+    "doctrine/orm": "^2.15",
+    "symfony/cache": "^6.2"
   },
   "autoload": {
     "psr-4": {
