@@ -95,7 +95,7 @@ function renderTransactionList(int $accountId): string
     // Render HTML
     $finalBody = "
         <h2>Transactions for {$account["name"]}</h2>
-        <table class='table table-sm table-striped table-hover'>
+        <table class='table table-sm table-hover'>
             <thead>
                 <tr>
                     <th>Date</th>
@@ -111,7 +111,7 @@ function renderTransactionList(int $accountId): string
         ";
     foreach ($transactions as $transaction) {
         $finalBody .= "
-            <tr>
+            <tr class='table-{$transaction['status']->toBootstrapColor()->value}'>
                 <td>{$transaction["date"]}</td>
                 <td>{$transaction["destination"]}</td>
                 <td>{$transaction["desc"]}</td>
