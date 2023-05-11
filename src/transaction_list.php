@@ -17,6 +17,9 @@ function renderTransactionList(int $accountId): string
 
 
     // Common vars
+    $plannedTotal = 0;
+    $pendingTotal = 0;
+    $processedTotal = 0;
     $amountTotal = 0;
 
 
@@ -59,9 +62,16 @@ function renderTransactionList(int $accountId): string
         $transactions[] = $transfer;
     }
 
-    foreach ($transactions as $transaction) {
+    foreach ($transactions as $key => $transaction) {
         $transaction["status"] = TransactionStatus::from($transaction["status"]);
+        $transaction['planned'] = $transaction['status'] == TransactionStatus::Planned ? $transaction['amount'] : 0;
+        $transaction['pending'] = $transaction['status'] == TransactionStatus::Pending ? $transaction['amount'] : 0;
+        $transaction['processed'] = $transaction['status'] == TransactionStatus::Processed ? $transaction['amount'] : 0;
+        $plannedTotal += $transaction['planned'];
+        $pendingTotal += $transaction['pending'];
+        $processedTotal += $transaction['processed'];
         $amountTotal += $transaction["amount"];
+        $transactions[$key] = $transaction;
     }
 
     // Default Sort: Date, Destination
@@ -91,8 +101,10 @@ function renderTransactionList(int $accountId): string
                     <th>Date</th>
                     <th>Destination</th>
                     <th>Description</th>
-                    <th>Status</th>
-                    <th>Amount</th>
+                    <th>Planned</th>
+                    <th>Pending</th>
+                    <th>Processed</th>
+                    <th>Expected</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,8 +115,10 @@ function renderTransactionList(int $accountId): string
                 <td>{$transaction["date"]}</td>
                 <td>{$transaction["destination"]}</td>
                 <td>{$transaction["desc"]}</td>
-                <td>{$transaction["status"]}</td>
-                <td>" . numberToAccounting($transaction["amount"]) . "</td>
+                <td>" . numberToAccounting($transaction["planned"]) . "</td>
+                <td>" . numberToAccounting($transaction["pending"]) . "</td>
+                <td>" . numberToAccounting($transaction["processed"]) . "</td>
+                <th>" . numberToAccounting($transaction["amount"]) . "</th>
             </tr>
         ";
     }
@@ -115,7 +129,9 @@ function renderTransactionList(int $accountId): string
                     <th>Total</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
-                    <th>&nbsp;</th>
+                    <th>" . numberToAccounting($plannedTotal) . "</th>
+                    <th>" . numberToAccounting($pendingTotal) . "</th>
+                    <th>" . numberToAccounting($processedTotal) . "</th>
                     <th>" . numberToAccounting($amountTotal) . "</th>
                 </tr>
             </tfoot>
