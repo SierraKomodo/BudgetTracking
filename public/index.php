@@ -4,9 +4,8 @@ namespace SierraKomodo\BudgetTracking;
 
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . '/../src/bootstrap.php');
 
-require_once(__DIR__ . '/../src/environment.php');
 require_once(__DIR__ . '/../src/render_html.php');
 $htmlOut = "";
 
