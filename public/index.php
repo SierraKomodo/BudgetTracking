@@ -21,10 +21,6 @@ if (!empty($_POST) && !empty($_GET['post'])) {
             $htmlOut .= require_once(__DIR__ . '/../src/account_add_post.php');
             break;
 
-        case "reserve/add":
-            $htmlOut .= require_once(__DIR__ . '/../src/reserve_add_post.php');
-            break;
-
         case "transaction/add":
             $htmlOut .= require_once(__DIR__ . '/../src/transaction_add_post.php');
             break;
@@ -53,11 +49,6 @@ switch ($_GET["page"]) {
     case 'account/list':
         require_once(__DIR__ . '/../src/account_list.php');
         $htmlOut .= renderAccountList();
-        break;
-
-    case "reserve/add":
-        require_once(__DIR__ . '/../src/reserve_add.php');
-        $htmlOut .= renderReserveAdd();
         break;
 
     case "transaction/add":

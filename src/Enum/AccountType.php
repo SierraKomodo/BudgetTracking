@@ -17,5 +17,6 @@ enum AccountType: string
 
     case Cash = "Cash";
     case Credit = "Credit";
+    case Reserve = "Reserve";
     case Other = "Other";
 }
