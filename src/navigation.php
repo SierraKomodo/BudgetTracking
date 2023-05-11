@@ -1,6 +1,11 @@
 <?php
+
 $navItems = [
     "Summary" => "summary",
+    "Account" => [
+        "List" => "account/list",
+        "Add" => "account/add",
+    ],
     "New" => [
         "Account" => "account/add",
         "Reserve" => "reserve/add",
