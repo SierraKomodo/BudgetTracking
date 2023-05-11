@@ -53,6 +53,11 @@ switch ($_GET["page"]) {
         $htmlOut .= renderAccountAdd();
         break;
 
+    case 'account/list':
+        require_once('../src/account_list.php');
+        $htmlOut .= renderAccountList();
+        break;
+
     case "reserve/add":
         require_once('../src/reserve_add.php');
         $htmlOut .= renderReserveAdd();
