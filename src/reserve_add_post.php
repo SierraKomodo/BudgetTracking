@@ -6,7 +6,7 @@ use SierraKomodo\BudgetTracking\Bootstrap\Alert;
 use SierraKomodo\BudgetTracking\Enum\BootstrapColor;
 use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
-require_once('common.php');
+require_once(__DIR__ . '/common.php');
 
 
 // Insert transaction

@@ -9,7 +9,7 @@ namespace SierraKomodo\BudgetTracking;
  */
 function renderHtml(string $body): string
 {
-    $navigation = require("navigation.php");
+    $navigation = require(__DIR__ . '/navigation.php');
     return <<<HTML
 <!doctype html>
 <html lang="en">

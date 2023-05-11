@@ -9,7 +9,7 @@ use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
 use function usort;
 
-require_once('common.php');
+require_once(__DIR__ . '/common.php');
 
 
 function renderTransactionList(int $accountId): string
