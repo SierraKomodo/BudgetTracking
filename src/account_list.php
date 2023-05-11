@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace SierraKomodo\BudgetTracking;
 
@@ -14,20 +14,19 @@ require_once('common.php');
 function renderAccountList(): string
 {
     global $conn;
-
-
+    
+    
     // Fetch and compile data
     $accounts = $conn->fetchAllAssociative("SELECT * FROM `accounts`;") ?: [];
     foreach ($accounts as $key => $account) {
-        $account['balance'] = 0;
+        $account['balance']  = 0;
         $account['expected'] = 0;
-        $transactions = $conn->fetchAllAssociative(
+        $transactions        = $conn->fetchAllAssociative(
             "
                 SELECT *
                 FROM `transactions`
                 WHERE `account` = :account;
-            ",
-            [
+            ", [
                 'account' => $account['id'],
             ]
         ) ?: [];
@@ -38,12 +37,12 @@ function renderAccountList(): string
             }
             $account['expected'] += $transaction['amount'];
         }
-        $account['balance'] = numberToAccounting($account['balance']);
+        $account['balance']  = numberToAccounting($account['balance']);
         $account['expected'] = numberToAccounting($account['expected']);
-        $accounts[$key] = $account;
+        $accounts[$key]      = $account;
     }
-
-
+    
+    
     // Render HTML
     $finalBody = "
         <h2>Accounts List</h2>
@@ -74,7 +73,7 @@ function renderAccountList(): string
             </tbody>
         </table>
     ";
-
-
+    
+    
     return $finalBody;
 }

@@ -16,8 +16,13 @@ abstract class Options extends FormField
     private bool $multiple;
 
 
-    public function __construct(string $id, string $label, bool $required = FALSE, array $options = [], bool $multiple = FALSE)
-    {
+    public function __construct(
+        string $id,
+        string $label,
+        bool $required = false,
+        array $options = [],
+        bool $multiple = false
+    ) {
         $this->setOptions($options);
         $this->setMultiple($multiple);
         parent::__construct($id, $label, $required);
@@ -36,23 +41,23 @@ abstract class Options extends FormField
         $this->options[$key] = $option;
     }
 
-    public function setOptions(array $options): void
-    {
-        $this->options = $options;
-    }
-
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function setMultiple(bool $multiple): void
+    public function setOptions(array $options): void
     {
-        $this->multiple = $multiple;
+        $this->options = $options;
     }
 
     public function getMultiple(): bool
     {
         return $this->multiple;
+    }
+
+    public function setMultiple(bool $multiple): void
+    {
+        $this->multiple = $multiple;
     }
 }

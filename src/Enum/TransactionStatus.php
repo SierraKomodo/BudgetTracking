@@ -10,12 +10,12 @@ enum TransactionStatus: string
 {
     use EnumToHtmlForm;
     use EnumValueToKey;
-
+    
     case Planned = "Planned";
     case Pending = "Pending";
     case Processed = "Processed";
-
-
+    
+    
     /**
      * Returns a bootstrap color based on the current transaction status.
      *

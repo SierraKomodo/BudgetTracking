@@ -9,6 +9,11 @@ abstract class Input extends FormField
     /** @var string $inputType The input field's type attribute. */
     protected string $inputType = "text";
 
+    public function setDefaultValue(string $defaultValue): void
+    {
+        $this->setAttribute("value", $defaultValue);
+        parent::setDefaultValue($defaultValue);
+    }
 
     protected function _renderInput(): string
     {
@@ -18,16 +23,8 @@ abstract class Input extends FormField
         ";
     }
 
-
     public function getInputType(): string
     {
         return $this->inputType;
-    }
-
-
-    public function setDefaultValue(string $defaultValue): void
-    {
-        $this->setAttribute("value", $defaultValue);
-        parent::setDefaultValue($defaultValue);
     }
 }

@@ -17,10 +17,12 @@ function renderAddTransaction(): string
     global $conn;
 
     // Fetch and compile data
-    $accounts = $conn->fetchAllAssociative("
+    $accounts = $conn->fetchAllAssociative(
+        "
         SELECT *
         FROM `accounts`;
-    ");
+    "
+    );
     $accountSelectGroup = [];
     foreach ($accounts as $account) {
         $accountSelectGroup[$account["id"]] = $account["name"];
@@ -28,12 +30,12 @@ function renderAddTransaction(): string
 
     // Form
     $form = new Form("transaction/add", "transaction/add", "Transaction");
-    $form->addField(new InputDate("date", "Date", TRUE));
-    $form->addField(new OptionsSelect("account", "Account", TRUE, $accountSelectGroup));
+    $form->addField(new InputDate("date", "Date", true));
+    $form->addField(new OptionsSelect("account", "Account", true, $accountSelectGroup));
     $form->addField(new OptionsSelect("dest_account", "Destination Account", options: $accountSelectGroup));
     $form->addField(new InputText("destination", "Destination"));
     $form->addField(new InputText("desc", "Description"));
-    $form->addField(new InputMoney("amount", "Amount", TRUE));
-    $form->addField(TransactionStatus::toOptionsSelect("status", "Status", TRUE));
+    $form->addField(new InputMoney("amount", "Amount", true));
+    $form->addField(TransactionStatus::toOptionsSelect("status", "Status", true));
     return $form->render();
 }

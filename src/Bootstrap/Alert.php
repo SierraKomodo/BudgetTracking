@@ -33,6 +33,20 @@ class Alert
         $this->setColor($color);
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    public function setColor(BootstrapColor $color): void
+    {
+        $this->color = $color;
+    }
 
     /**
      * Renders the alert into HTML.
@@ -47,21 +61,5 @@ class Alert
                 <p>{$this->content}</p>
             </div>
         ";
-    }
-
-
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-    public function setContent(string $content): void
-    {
-        $this->content = $content;
-    }
-
-    public function setColor(BootstrapColor $color): void
-    {
-        $this->color = $color;
     }
 }

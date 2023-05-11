@@ -5,7 +5,6 @@ namespace SierraKomodo\BudgetTracking;
 
 
 // Required files
-use PDO;
 use SierraKomodo\BudgetTracking\Enum\AccountType;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 
@@ -19,14 +18,14 @@ require_once('common.php');
 function renderSummary(): string
 {
     global $conn;
-
+    
     // Common function vars
-    $summaryCash = 0;
-    $summaryReserved = 0;
-    $summaryCredit = 0;
-    $cashAccounts = [];
-    $creditAccounts = [];
-    $otherAccounts = [];
+    $summaryCash             = 0;
+    $summaryReserved         = 0;
+    $summaryCredit           = 0;
+    $cashAccounts            = [];
+    $creditAccounts          = [];
+    $otherAccounts           = [];
     $accountTypeStatusTotals = [];
     foreach (AccountType::cases() as $accountType) {
         foreach (TransactionStatus::cases() as $transactionStatus) {
@@ -35,105 +34,118 @@ function renderSummary(): string
         $accountTypeStatusTotals["{$accountType->toKey()}_expected"] = 0;
         $accountTypeStatusTotals["{$accountType->toKey()}_reserved"] = 0;
     }
-    $accountTypeStatusTotals["credit_limit"] = 0;
-    $accountTypeStatusTotals["credit_usage"] = 0.00;
+    $accountTypeStatusTotals["credit_limit"]     = 0;
+    $accountTypeStatusTotals["credit_usage"]     = 0.00;
     $accountTypeStatusTotals["credit_available"] = 0.00;
-    $accountTypeStatusTotals["credit_rewards"] = 0.00;
-    $accountTypeStatusTotals["credit_payments"] = 0;
-
+    $accountTypeStatusTotals["credit_rewards"]   = 0.00;
+    $accountTypeStatusTotals["credit_payments"]  = 0;
+    
     // Fetch and compile data
-    $accounts = $conn->fetchAllAssociative("
+    $accounts = $conn->fetchAllAssociative(
+        "
         SELECT *
         FROM `accounts`;
-    ");
+    "
+    );
     foreach ($accounts as $account) {
-        $account["account_type"] = AccountType::from($account["account_type"]);
-        $account["transactions"] = $conn->fetchAllAssociative(
+        $account["account_type"]    = AccountType::from($account["account_type"]);
+        $account["transactions"]    = $conn->fetchAllAssociative(
             "
                 SELECT *
                 FROM `transactions`
                 WHERE `account` = :account;
-            ",
-            [
-                "account" => $account["id"]
+            ", [
+                "account" => $account["id"],
             ]
         );
-        $account["transfers"] = $conn->fetchAllAssociative(
+        $account["transfers"]       = $conn->fetchAllAssociative(
             "
                 SELECT *
                 FROM `transactions`
                 WHERE `dest_account` = :dest_account;
-            ",
-            [
-                "dest_account" => $account["id"]
+            ", [
+                "dest_account" => $account["id"],
             ]
         );
-        $account["reserves"] = $conn->fetchAllAssociative(
+        $account["reserves"]        = $conn->fetchAllAssociative(
             "
                 SELECT *
                 FROM `reserves`
                 WHERE `account` = :account;
-            ",
-            [
-                "account" => $account["id"]
+            ", [
+                "account" => $account["id"],
             ]
         );
-        $account["total_planned"] = 0;
-        $account["total_pending"] = 0;
+        $account["total_planned"]   = 0;
+        $account["total_pending"]   = 0;
         $account["total_processed"] = 0;
-        $account["total_expected"] = 0;
-        $account["total_reserved"] = 0;
-        $account["credit"] = null;
+        $account["total_expected"]  = 0;
+        $account["total_reserved"]  = 0;
+        $account["credit"]          = null;
         foreach ($account["transactions"] as $transaction) {
-            $transaction["status"] = TransactionStatus::from($transaction["status"]);
-            $account["total_{$transaction["status"]->toKey()}"] += $transaction["amount"];
-            $account["total_expected"] += $transaction["amount"];
+            $transaction["status"]                                                                            = TransactionStatus::from(
+                $transaction["status"]
+            );
+            $account["total_{$transaction["status"]->toKey()}"]                                               += $transaction["amount"];
+            $account["total_expected"]                                                                        += $transaction["amount"];
             $accountTypeStatusTotals["{$account["account_type"]->toKey()}_{$transaction["status"]->toKey()}"] += $transaction["amount"];
-            $accountTypeStatusTotals["{$account["account_type"]->toKey()}_expected"] += $transaction["amount"];
+            $accountTypeStatusTotals["{$account["account_type"]->toKey()}_expected"]                          += $transaction["amount"];
         }
         foreach ($account["transfers"] as $transfer) {
-            $transfer["amount"] = -$transfer["amount"];
-            $transfer["status"] = TransactionStatus::from($transfer["status"]);
-            $account["total_{$transfer["status"]->toKey()}"] += $transfer["amount"];
-            $account["total_expected"] += $transfer["amount"];
+            $transfer["amount"]                                                                            = -$transfer["amount"];
+            $transfer["status"]                                                                            = TransactionStatus::from(
+                $transfer["status"]
+            );
+            $account["total_{$transfer["status"]->toKey()}"]                                               += $transfer["amount"];
+            $account["total_expected"]                                                                     += $transfer["amount"];
             $accountTypeStatusTotals["{$account["account_type"]->toKey()}_{$transfer["status"]->toKey()}"] += $transfer["amount"];
-            $accountTypeStatusTotals["{$account["account_type"]->toKey()}_expected"] += $transfer["amount"];
+            $accountTypeStatusTotals["{$account["account_type"]->toKey()}_expected"]                       += $transfer["amount"];
         }
         foreach ($account["reserves"] as $reserve) {
-            $summaryReserved += $reserve["amount"];
-            $account["total_reserved"] += $reserve["amount"];
-            $account["total_expected"] += $reserve["amount"];
+            $summaryReserved                                                         += $reserve["amount"];
+            $account["total_reserved"]                                               += $reserve["amount"];
+            $account["total_expected"]                                               += $reserve["amount"];
             $accountTypeStatusTotals["{$account["account_type"]->toKey()}_reserved"] += $reserve["amount"];
             $accountTypeStatusTotals["{$account["account_type"]->toKey()}_expected"] += $reserve["amount"];
         }
-
+        
         switch ($account["account_type"]) {
             case AccountType::Cash:
-                $summaryCash += $account["total_expected"];
+                $summaryCash    += $account["total_expected"];
                 $cashAccounts[] = $account;
                 break;
             case AccountType::Credit:
-                $summaryCredit += $account["total_expected"];
-                $account["credit"] = $conn->fetchAssociative(
+                $summaryCredit                               += $account["total_expected"];
+                $account["credit"]                           = $conn->fetchAssociative(
                     "
                         SELECT *
                         FROM `accounts_credit`
                         WHERE `id` = :id;
-                    ",
-                    [
+                    ", [
                         "id" => $account["id"],
                     ]
                 );
-                $account["credit"]["available"] = $account["credit"]["limit"] + $account["total_processed"];
-                $account["credit"]["expected_available"] = $account["credit"]["limit"] + $account["total_expected"];
-                $account["credit"]["usage"] = round(abs($account["total_processed"]) / $account["credit"]["limit"] * 100, 2);
-                $account["credit"]["expected_usage"] = round(abs($account["total_expected"]) / $account["credit"]["limit"] * 100, 2);
-                $account["credit"]["payments"] = $account["credit"]["minimum_payment"] != 0 ? ceil(abs($account["total_expected"]) / $account["credit"]["minimum_payment"]) : null;
-                $accountTypeStatusTotals["credit_limit"] += $account["credit"]["limit"];
+                $account["credit"]["available"]              = $account["credit"]["limit"] + $account["total_processed"];
+                $account["credit"]["expected_available"]     = $account["credit"]["limit"] + $account["total_expected"];
+                $account["credit"]["usage"]                  = round(
+                    abs($account["total_processed"]) / $account["credit"]["limit"] * 100,
+                    2
+                );
+                $account["credit"]["expected_usage"]         = round(
+                    abs($account["total_expected"]) / $account["credit"]["limit"] * 100,
+                    2
+                );
+                $account["credit"]["payments"]               = $account["credit"]["minimum_payment"] != 0 ? ceil(
+                    abs($account["total_expected"]) / $account["credit"]["minimum_payment"]
+                ) : null;
+                $accountTypeStatusTotals["credit_limit"]     += $account["credit"]["limit"];
                 $accountTypeStatusTotals["credit_available"] += $account["credit"]["expected_available"];
-                $accountTypeStatusTotals["credit_rewards"] += $account["credit"]["rewards"];
-                $accountTypeStatusTotals["credit_payments"] = max($accountTypeStatusTotals["credit_payments"], $account["credit"]["payments"]);
-                $creditAccounts[] = $account;
+                $accountTypeStatusTotals["credit_rewards"]   += $account["credit"]["rewards"];
+                $accountTypeStatusTotals["credit_payments"]  = max(
+                    $accountTypeStatusTotals["credit_payments"],
+                    $account["credit"]["payments"]
+                );
+                $creditAccounts[]                            = $account;
                 break;
             case AccountType::Other:
                 $otherAccounts[] = $account;
@@ -142,9 +154,12 @@ function renderSummary(): string
     }
     $summaryTotal = $summaryCash + $summaryCredit + $summaryReserved;
     if ($accountTypeStatusTotals["credit_limit"]) {
-        $accountTypeStatusTotals["credit_usage"] = round(abs($accountTypeStatusTotals["credit_expected"]) / $accountTypeStatusTotals["credit_limit"] * 100, 2);
+        $accountTypeStatusTotals["credit_usage"] = round(
+            abs($accountTypeStatusTotals["credit_expected"]) / $accountTypeStatusTotals["credit_limit"] * 100,
+            2
+        );
     }
-
+    
     /* Cash Available */
     $availableTable = "
         <h2>Overview</h2>
@@ -169,8 +184,8 @@ function renderSummary(): string
             </tbody>
         </table>
     ";
-
-
+    
+    
     /* Cash Accounts */
     $cashAccountsTable = "
         <h2>Cash Accounts</h2>
@@ -213,8 +228,8 @@ function renderSummary(): string
             </tfoot>
         </table>
     ";
-
-
+    
+    
     /* Credit Accounts */
     $creditAccountsTable = "
         <h2>Credit Accounts</h2>
@@ -269,8 +284,8 @@ function renderSummary(): string
             </tfoot>
         </table>
     ";
-
-
+    
+    
     /* Other Accounts */
     $otherAccountsTable = "
         <h2>Other Accounts</h2>
@@ -313,8 +328,11 @@ function renderSummary(): string
             </tfoot>
         </table>
     ";
-
-
+    
+    
     /* Merge tables */
-    return "<h1>Summary</h1>" . implode("<hr />", [$availableTable, $cashAccountsTable, $creditAccountsTable, $otherAccountsTable]);
+    return "<h1>Summary</h1>" . implode(
+            "<hr />",
+            [$availableTable, $cashAccountsTable, $creditAccountsTable, $otherAccountsTable]
+        );
 }
