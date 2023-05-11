@@ -4,74 +4,74 @@
 namespace SierraKomodo\BudgetTracking;
 
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
-
-use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
-
-use function usort;
+use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
+use SierraKomodo\BudgetTracking\Model\Account;
 
 require_once(__DIR__ . '/common.php');
 
 
 function renderTransactionList(int $accountId): string
 {
-    // Common vars
-    $plannedTotal   = 0;
-    $pendingTotal   = 0;
-    $processedTotal = 0;
-    $amountTotal    = 0;
-    
-    
+    /** @var string[][] $tableDataRows Array of table data rows. */
+    $tableDataRows = [];
+
+    /** @var int[]|string[] $totalDataRow Table data total row. Int while being processed, converted to string for rendering. */
+    $totalDataRow = [
+        'expected' => 0,
+    ];
+    foreach (TransactionStatus::cases() as $transactionStatus) {
+        $totalDataRow[$transactionStatus->toKey()] = 0;
+    }
+
+
     // Fetch and compile data
-    $conn = DatabaseConnectionFactory::getConnection();
-    $account = $conn->fetchAssociative(
-        "
-            SELECT `name`
-            FROM `accounts`
-            WHERE `id` = :id;
-        ", [
-            "id" => $accountId,
-        ]
-    );
-    
-    $transactions = $conn->fetchAllAssociative(
-        "
-            SELECT *
-            FROM `transactions`
-            WHERE `account` = :account;
-        ", [
-            "account" => $accountId,
-        ]
-    );
-    
-    $transfers = $conn->fetchAllAssociative(
-        "
-            SELECT *
-            FROM `transactions`
-            WHERE `dest_account` = :dest_account;
-        ", [
-            "dest_account" => $accountId,
-        ]
-    );
-    
-    foreach ($transfers as $transfer) {
-        $transfer["amount"] = -$transfer["amount"];
-        $transactions[]     = $transfer;
+    $entityManager = EntityManagerFactory::getEntityManager();
+    $account = $entityManager->getRepository(Account::class)->find($accountId);
+    foreach ($account->getTransactions() as $transaction) {
+        $dataRow = [
+            'status-class' => $transaction->getStatus()->toBootstrapColor()->value,
+            'date' => $transaction->getDate()->format('Y-m-d'),
+            'destination' => $transaction->getDestination(),
+            'desc' => $transaction->getDesc(),
+            'expected' => numberToAccounting($transaction->getAmount()),
+        ];
+        $totalDataRow['expected'] += $transaction->getAmount();
+        foreach (TransactionStatus::cases() as $transactionStatus) {
+            if ($transactionStatus == $transaction->getStatus()) {
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting($transaction->getAmount());
+                $totalDataRow[$transactionStatus->toKey()] += $transaction->getAmount();
+            } else {
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
+            }
+        }
+        $tableDataRows[] = $dataRow;
     }
-    
-    foreach ($transactions as $key => $transaction) {
-        $transaction["status"]    = TransactionStatus::from($transaction["status"]);
-        $transaction['planned']   = $transaction['status'] == TransactionStatus::Planned ? $transaction['amount'] : 0;
-        $transaction['pending']   = $transaction['status'] == TransactionStatus::Pending ? $transaction['amount'] : 0;
-        $transaction['processed'] = $transaction['status'] == TransactionStatus::Processed ? $transaction['amount'] : 0;
-        $plannedTotal             += $transaction['planned'];
-        $pendingTotal             += $transaction['pending'];
-        $processedTotal           += $transaction['processed'];
-        $amountTotal              += $transaction["amount"];
-        $transactions[$key]       = $transaction;
+    foreach ($account->getTransfers() as $transfer) {
+        $dataRow = [
+            'status-class' => $transfer->getStatus()->toBootstrapColor()->value,
+            'date' => $transfer->getDate()->format('Y-m-d'),
+            'destination' => $transfer->getDestination(),
+            'desc' => $transfer->getDesc(),
+            'expected' => numberToAccounting(-$transfer->getAmount()),
+        ];
+        $totalDataRow['expected'] -= $transfer->getAmount();
+        foreach (TransactionStatus::cases() as $transactionStatus) {
+            if ($transactionStatus == $transfer->getStatus()) {
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting($transfer->getAmount());
+                $totalDataRow[$transactionStatus->toKey()] += $transfer->getAmount();
+            } else {
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
+            }
+        }
+        $tableDataRows[] = $dataRow;
     }
-    
-    // Default Sort: Date, Destination
-    usort($transactions, function (array $a, array $b) {
+    foreach ($totalDataRow as $key => $value) {
+        $totalDataRow[$key] = numberToAccounting($value);
+    }
+
+
+    // Default data sorting - date, destination
+    usort($tableDataRows, function (array $a, array $b) {
         if ($a['date'] < $b['date']) {
             return -1;
         }
@@ -86,11 +86,11 @@ function renderTransactionList(int $accountId): string
         }
         return 0;
     });
-    
-    
+
+
     // Render HTML
     $finalBody = "
-        <h2>Transactions for {$account["name"]}</h2>
+        <h2>Transactions for {$account->getName()}</h2>
         <table class='table table-sm table-hover'>
             <thead>
                 <tr>
@@ -105,16 +105,16 @@ function renderTransactionList(int $accountId): string
             </thead>
             <tbody>
         ";
-    foreach ($transactions as $transaction) {
+    foreach ($tableDataRows as $tableDataRow) {
         $finalBody .= "
-            <tr class='table-{$transaction['status']->toBootstrapColor()->value}'>
-                <td>{$transaction["date"]}</td>
-                <td>{$transaction["destination"]}</td>
-                <td>{$transaction["desc"]}</td>
-                <td>" . numberToAccounting($transaction["planned"]) . "</td>
-                <td>" . numberToAccounting($transaction["pending"]) . "</td>
-                <td>" . numberToAccounting($transaction["processed"]) . "</td>
-                <th>" . numberToAccounting($transaction["amount"]) . "</th>
+            <tr class='table-{$tableDataRow['status-class']}'>
+                <td>{$tableDataRow["date"]}</td>
+                <td>{$tableDataRow["destination"]}</td>
+                <td>{$tableDataRow["desc"]}</td>
+                <th>{$tableDataRow["planned"]}</th>
+                <th>{$tableDataRow["pending"]}</th>
+                <th>{$tableDataRow["processed"]}</th>
+                <th>{$tableDataRow["expected"]}</th>
             </tr>
         ";
     }
@@ -125,10 +125,10 @@ function renderTransactionList(int $accountId): string
                     <th>Total</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
-                    <th>" . numberToAccounting($plannedTotal) . "</th>
-                    <th>" . numberToAccounting($pendingTotal) . "</th>
-                    <th>" . numberToAccounting($processedTotal) . "</th>
-                    <th>" . numberToAccounting($amountTotal) . "</th>
+                    <th>{$totalDataRow['planned']}</th>
+                    <th>{$totalDataRow['pending']}</th>
+                    <th>{$totalDataRow['processed']}</th>
+                    <th>{$totalDataRow['expected']}</th>
                 </tr>
             </tfoot>
         </table>

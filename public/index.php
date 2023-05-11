@@ -2,6 +2,7 @@
 
 namespace SierraKomodo\BudgetTracking;
 
+use SierraKomodo\BudgetTracking\Bootstrap\Alert;
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 
 require_once(__DIR__ . '/../src/bootstrap.php');
@@ -13,25 +14,19 @@ $htmlOut = "";
 $entityManager = EntityManagerFactory::getEntityManager();
 
 
-if (!empty($_POST)) {
-    if (!isset($_GET["post"])) {
-        $_GET["post"] = "";
-    }
+if (!empty($_POST) && !empty($_GET['post'])) {
+    $postResult = [];
     switch ($_GET["post"]) {
         case "account/add":
-            require_once(__DIR__ . '/../src/account_add_post.php');
+            $htmlOut .= require_once(__DIR__ . '/../src/account_add_post.php');
             break;
 
         case "reserve/add":
-            require_once(__DIR__ . '/../src/reserve_add_post.php');
+            $htmlOut .= require_once(__DIR__ . '/../src/reserve_add_post.php');
             break;
 
         case "transaction/add":
-            require_once(__DIR__ . '/../src/transaction_add_post.php');
-            break;
-
-        case "":
-            // Do nothing
+            $htmlOut .= require_once(__DIR__ . '/../src/transaction_add_post.php');
             break;
 
         default:

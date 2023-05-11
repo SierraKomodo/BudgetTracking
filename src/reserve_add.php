@@ -5,29 +5,22 @@ namespace SierraKomodo\BudgetTracking;
 use SierraKomodo\BudgetTracking\Bootstrap\Form;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputMoney;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputText;
-use SierraKomodo\BudgetTracking\Bootstrap\FormField\Options\OptionsSelect;
-use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
+use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
+use SierraKomodo\BudgetTracking\Model\Account;
+use SierraKomodo\BudgetTracking\Repository\AccountRepository;
 
 
 function renderReserveAdd(): string
 {
     // Fetch and compile data
-    $conn = DatabaseConnectionFactory::getConnection();
-    $accounts = $conn->fetchAllAssociative(
-        "
-        SELECT *
-        FROM `accounts`;
-    "
-    );
-    $accountSelectGroup = [];
-    foreach ($accounts as $account) {
-        $accountSelectGroup[$account["id"]] = $account["name"];
-    }
+    $entityManager = EntityManagerFactory::getEntityManager();
+    /** @var AccountRepository $accountRepository */
+    $accountRepository = $entityManager->getRepository(Account::class);
 
     // Form
     $form = new Form("reserve/add", "reserve/add", "Reserve");
     $form->addField(new InputText("desc", "Description", true));
-    $form->addField(new OptionsSelect("account", "Account", true, $accountSelectGroup));
+    $form->addField($accountRepository->toOptionsSelect());
     $form->addField(new InputMoney("amount", "Amount", true));
     return $form->render();
 }
