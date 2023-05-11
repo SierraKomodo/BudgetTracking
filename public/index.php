@@ -2,9 +2,6 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-use SierraKomodo\BudgetTracking\Bootstrap\Alert;
-use SierraKomodo\BudgetTracking\Enum\BootstrapColor;
-
 require_once('../vendor/autoload.php');
 
 require_once('../src/render_html.php');
