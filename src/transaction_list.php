@@ -66,7 +66,7 @@ function renderTransactionList(int $accountId): string
     // Render HTML
     $finalBody = "
         <h2>Transactions for {$account["name"]}</h2>
-        <table>
+        <table class='table table-sm table-striped table-hover'>
             <thead>
                 <tr>
                     <th>Date</th>
@@ -94,10 +94,10 @@ function renderTransactionList(int $accountId): string
             <tfoot>
                 <tr>
                     <th>Total</th>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>" . numberToAccounting($amountTotal) . "</td>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>" . numberToAccounting($amountTotal) . "</th>
                 </tr>
             </tfoot>
         </table>
