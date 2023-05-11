@@ -2,31 +2,27 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-require_once('../vendor/autoload.php');
+use SierraKomodo\BudgetTracking\Bootstrap\Alert;
+use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 
-require_once('../src/render_html.php');
+require_once(__DIR__ . '/../src/bootstrap.php');
+
+require_once(__DIR__ . '/../src/render_html.php');
 $htmlOut = "";
 
 
-if (!empty($_POST)) {
-    if (!isset($_GET["post"])) {
-        $_GET["post"] = "";
-    }
+$entityManager = EntityManagerFactory::getEntityManager();
+
+
+if (!empty($_POST) && !empty($_GET['post'])) {
+    $postResult = [];
     switch ($_GET["post"]) {
         case "account/add":
-            require_once('../src/account_add_post.php');
-            break;
-
-        case "reserve/add":
-            require_once('../src/reserve_add_post.php');
+            $htmlOut .= require_once(__DIR__ . '/../src/account_add_post.php');
             break;
 
         case "transaction/add":
-            require_once('../src/transaction_add_post.php');
-            break;
-
-        case "":
-            // Do nothing
+            $htmlOut .= require_once(__DIR__ . '/../src/transaction_add_post.php');
             break;
 
         default:
@@ -41,37 +37,32 @@ if (!isset($_GET["page"])) {
 switch ($_GET["page"]) {
     case "":
     case "summary":
-        require_once("../src/summary.php");
+        require_once(__DIR__ . '/../src/summary.php');
         $htmlOut .= renderSummary();
         break;
 
     case "account/add":
-        require_once('../src/account_add.php');
+        require_once(__DIR__ . '/../src/account_add.php');
         $htmlOut .= renderAccountAdd();
         break;
 
     case 'account/list':
-        require_once('../src/account_list.php');
+        require_once(__DIR__ . '/../src/account_list.php');
         $htmlOut .= renderAccountList();
         break;
 
-    case "reserve/add":
-        require_once('../src/reserve_add.php');
-        $htmlOut .= renderReserveAdd();
-        break;
-
     case "transaction/add":
-        require_once("../src/transaction_add.php");
+        require_once(__DIR__ . '/../src/transaction_add.php');
         $htmlOut .= renderAddTransaction();
         break;
 
     case "transaction/list":
-        require_once("../src/transaction_list.php");
+        require_once(__DIR__ . '/../src/transaction_list.php');
         $htmlOut .= renderTransactionList($_GET["account"]);
         break;
 
     default:
-        require_once("../src/404.php");
+        require_once(__DIR__ . '/../src/404.php');
         $htmlOut .= render404();
 }
 

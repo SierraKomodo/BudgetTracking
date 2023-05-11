@@ -1,48 +1,60 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace SierraKomodo\BudgetTracking;
 
 
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
+use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
+use SierraKomodo\BudgetTracking\Model\Account;
 
-require_once('database.php');
-require_once('common.php');
+require_once(__DIR__ . '/common.php');
 
 
 function renderAccountList(): string
 {
-    global $conn;
-    
-    
+    /** @var string[][] $tableDataRows Array of table data rows. */
+    $tableDataRows = [];
+
+    /** @var int[]|string[] $totalDataRow Table data total row. Int while being processed, converted to string for rendering. */
+    $totalDataRow = [
+        'balance' => 0,
+        'expected' => 0,
+    ];
+
+
     // Fetch and compile data
-    $accounts = $conn->fetchAllAssociative("SELECT * FROM `accounts`;") ?: [];
-    foreach ($accounts as $key => $account) {
-        $account['balance']  = 0;
-        $account['expected'] = 0;
-        $transactions        = $conn->fetchAllAssociative(
-            "
-                SELECT *
-                FROM `transactions`
-                WHERE `account` = :account;
-            ", [
-                'account' => $account['id'],
-            ]
-        ) ?: [];
-        foreach ($transactions as $transaction) {
-            $transaction['status'] = TransactionStatus::from($transaction['status']);
-            if ($transaction['status'] == TransactionStatus::Processed) {
-                $account['balance'] += $transaction['amount'];
-            }
-            $account['expected'] += $transaction['amount'];
-        }
-        $account['balance']  = numberToAccounting($account['balance']);
-        $account['expected'] = numberToAccounting($account['expected']);
-        $accounts[$key]      = $account;
+    $entityManager = EntityManagerFactory::getEntityManager();
+    $accounts = $entityManager->getRepository(Account::class)->findAll();
+    foreach ($accounts as $account) {
+        $balance = $account->getTransactionTotal(TransactionStatus::Processed);
+        $expected = $account->getAllTransactionTotal();
+        $tableDataRows[] = [
+            'name' => $account->getName(),
+            'type' => $account->getAccountType()->value,
+            'balance' => numberToAccounting($balance),
+            'expected' => numberToAccounting($expected),
+        ];
+        $totalDataRow['balance'] += $balance;
+        $totalDataRow['expected'] += $expected;
     }
-    
-    
+    $totalDataRow['balance'] = numberToAccounting($totalDataRow['balance']);
+    $totalDataRow['expected'] = numberToAccounting($totalDataRow['expected']);
+
+
+    // Default data sorting - name
+    usort($tableDataRows, function(array $a, array $b) {
+        if ($a['name'] < $b['name']) {
+            return -1;
+        }
+        if ($a['name'] > $b['name']) {
+            return 1;
+        }
+        return 0;
+    });
+
+
     // Render HTML
     $finalBody = "
         <h2>Accounts List</h2>
@@ -50,7 +62,6 @@ function renderAccountList(): string
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Description</th>
                     <th>Account Type</th>
                     <th>Balance</th>
                     <th>Expected</th>
@@ -58,22 +69,29 @@ function renderAccountList(): string
             </thead>
             <tbody>
     ";
-    foreach ($accounts as $account) {
+    foreach ($tableDataRows as $tableDataRow) {
         $finalBody .= "
             <tr>
-                <th>{$account['name']}</th>
-                <td>{$account['desc']}</td>
-                <td>{$account['account_type']}</td>
-                <td>{$account['balance']}</td>
-                <td>{$account['expected']}</td>
+                <th>{$tableDataRow['name']}</th>
+                <td>{$tableDataRow['type']}</td>
+                <td>{$tableDataRow['balance']}</td>
+                <td>{$tableDataRow['expected']}</td>
             </tr>
         ";
     }
     $finalBody .= "
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>TOTAL</th>
+                    <td>&nbsp;</td>
+                    <td>{$totalDataRow['balance']}</td>
+                    <td>{$totalDataRow['expected']}</td>
+                </tr>
+            </tfoot>
         </table>
     ";
-    
-    
+
+
     return $finalBody;
 }

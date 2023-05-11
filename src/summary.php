@@ -7,9 +7,9 @@ namespace SierraKomodo\BudgetTracking;
 // Required files
 use SierraKomodo\BudgetTracking\Enum\AccountType;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
-require_once('database.php');
-require_once('common.php');
+require_once(__DIR__ . '/common.php');
 
 
 /**
@@ -17,8 +17,6 @@ require_once('common.php');
  */
 function renderSummary(): string
 {
-    global $conn;
-    
     // Common function vars
     $summaryCash             = 0;
     $summaryReserved         = 0;
@@ -41,6 +39,7 @@ function renderSummary(): string
     $accountTypeStatusTotals["credit_payments"]  = 0;
     
     // Fetch and compile data
+    $conn = DatabaseConnectionFactory::getConnection();
     $accounts = $conn->fetchAllAssociative(
         "
         SELECT *
