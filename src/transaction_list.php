@@ -5,6 +5,8 @@ namespace SierraKomodo\BudgetTracking;
 
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 
+use function usort;
+
 require_once('database.php');
 require_once('common.php');
 
@@ -61,6 +63,23 @@ function renderTransactionList(int $accountId): string
         $transaction["status"] = TransactionStatus::from($transaction["status"]);
         $amountTotal += $transaction["amount"];
     }
+
+    // Default Sort: Date, Destination
+    usort($transactions, function (array $a, array $b) {
+        if ($a['date'] < $b['date']) {
+            return -1;
+        }
+        if ($a['date'] > $b['date']) {
+            return 1;
+        }
+        if ($a['destination'] < $b['destination']) {
+            return -1;
+        }
+        if ($a['destination'] > $b['destination']) {
+            return 1;
+        }
+        return 0;
+    });
 
 
     // Render HTML
