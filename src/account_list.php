@@ -6,17 +6,15 @@ namespace SierraKomodo\BudgetTracking;
 
 
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
-require_once('database.php');
 require_once('common.php');
 
 
 function renderAccountList(): string
 {
-    global $conn;
-    
-    
     // Fetch and compile data
+    $conn = DatabaseConnectionFactory::getConnection();
     $accounts = $conn->fetchAllAssociative("SELECT * FROM `accounts`;") ?: [];
     foreach ($accounts as $key => $account) {
         $account['balance']  = 0;

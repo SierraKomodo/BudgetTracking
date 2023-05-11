@@ -5,17 +5,15 @@ namespace SierraKomodo\BudgetTracking;
 
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
+
 use function usort;
 
-require_once('database.php');
 require_once('common.php');
 
 
 function renderTransactionList(int $accountId): string
 {
-    global $conn;
-    
-    
     // Common vars
     $plannedTotal   = 0;
     $pendingTotal   = 0;
@@ -24,6 +22,7 @@ function renderTransactionList(int $accountId): string
     
     
     // Fetch and compile data
+    $conn = DatabaseConnectionFactory::getConnection();
     $account = $conn->fetchAssociative(
         "
             SELECT `name`

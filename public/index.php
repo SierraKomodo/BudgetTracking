@@ -4,6 +4,7 @@ namespace SierraKomodo\BudgetTracking;
 
 require_once('../vendor/autoload.php');
 
+require_once('../src/environment.php');
 require_once('../src/render_html.php');
 $htmlOut = "";
 

@@ -8,15 +8,13 @@ use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputMoney;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputText;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Options\OptionsSelect;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
-
-require_once('database.php');
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
 
 function renderAddTransaction(): string
 {
-    global $conn;
-
     // Fetch and compile data
+    $conn = DatabaseConnectionFactory::getConnection();
     $accounts = $conn->fetchAllAssociative(
         "
         SELECT *

@@ -2,10 +2,7 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-global $conn;
-
-require_once('database.php');
-
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
 // Validate data
 if (!$_POST["dest_account"] && !$_POST["destination"]) {
@@ -14,6 +11,7 @@ if (!$_POST["dest_account"] && !$_POST["destination"]) {
     $_GET["page"] = "transaction/add";
     return;
 }
+$conn = DatabaseConnectionFactory::getConnection();
 if ($_POST["dest_account"] && !$_POST["destination"]) {
     $account = $conn->fetchAssociative(
         "

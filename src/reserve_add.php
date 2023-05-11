@@ -6,15 +6,13 @@ use SierraKomodo\BudgetTracking\Bootstrap\Form;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputMoney;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputText;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Options\OptionsSelect;
-
-require_once('database.php');
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
 
 function renderReserveAdd(): string
 {
-    global $conn;
-
     // Fetch and compile data
+    $conn = DatabaseConnectionFactory::getConnection();
     $accounts = $conn->fetchAllAssociative(
         "
         SELECT *

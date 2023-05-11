@@ -2,16 +2,15 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-global $conn;
-
 use SierraKomodo\BudgetTracking\Bootstrap\Alert;
 use SierraKomodo\BudgetTracking\Enum\BootstrapColor;
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
-require_once('database.php');
 require_once('common.php');
 
 
 // Insert transaction
+$conn = DatabaseConnectionFactory::getConnection();
 $result = $conn->executeStatement(
     "
         INSERT INTO `reserves` (`desc`, `account`, `amount`)

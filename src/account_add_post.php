@@ -2,12 +2,9 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-global $conn;
-
 use SierraKomodo\BudgetTracking\Bootstrap\Alert;
 use SierraKomodo\BudgetTracking\Enum\BootstrapColor;
-
-require_once('database.php');
+use SierraKomodo\BudgetTracking\Factory\DatabaseConnectionFactory;
 
 
 // Validate data
@@ -22,6 +19,7 @@ if ($_POST["account_type"] == "Credit") {
 
 
 // Insert account
+$conn = DatabaseConnectionFactory::getConnection();
 $result = $conn->executeStatement(
     "
         INSERT INTO `accounts` (`name`, `desc`, `account_type`)
