@@ -57,8 +57,8 @@ function renderTransactionList(int $accountId): string
         $totalDataRow['expected'] -= $transfer->getAmount();
         foreach (TransactionStatus::cases() as $transactionStatus) {
             if ($transactionStatus == $transfer->getStatus()) {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting($transfer->getAmount());
-                $totalDataRow[$transactionStatus->toKey()] += $transfer->getAmount();
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting(-$transfer->getAmount());
+                $totalDataRow[$transactionStatus->toKey()] -= $transfer->getAmount();
             } else {
                 $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
             }

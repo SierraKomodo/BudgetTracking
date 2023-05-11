@@ -94,7 +94,7 @@ class Account
             if ($transfer->getStatus() != $status) {
                 continue;
             }
-            $result += $transfer->getAmount();
+            $result -= $transfer->getAmount();
         }
         return $result;
     }
