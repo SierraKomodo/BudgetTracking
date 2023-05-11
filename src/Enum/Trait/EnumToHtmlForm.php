@@ -2,7 +2,6 @@
 
 namespace SierraKomodo\BudgetTracking\Enum\Trait;
 
-use SierraKomodo\BudgetTracking\Bootstrap\FormField\Input\InputDate;
 use SierraKomodo\BudgetTracking\Bootstrap\FormField\Options\OptionsSelect;
 
 /**
@@ -18,8 +17,11 @@ trait EnumToHtmlForm
      * @param bool $required Whether the field is required.
      * @return OptionsSelect The created OptionsSelect object.
      */
-    public static function toOptionsSelect(string $id = "enum", string $label = "Enum Select", bool $required = FALSE): OptionsSelect
-    {
+    public static function toOptionsSelect(
+        string $id = "enum",
+        string $label = "Enum Select",
+        bool $required = false
+    ): OptionsSelect {
         $options = [];
         foreach (self::cases() as $type) {
             $options[$type->value] = $type->value;

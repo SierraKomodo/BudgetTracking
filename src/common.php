@@ -5,11 +5,13 @@ namespace SierraKomodo\BudgetTracking;
 
 function numberToAccounting(float|null $amount): string
 {
-    if (is_null($amount))
+    if (is_null($amount)) {
         return "";
+    }
     $negative = false;
-    if ($amount < 0)
+    if ($amount < 0) {
         $negative = true;
+    }
     $amount = abs($amount);
     $amount = number_format($amount, 2);
     $color = "black";

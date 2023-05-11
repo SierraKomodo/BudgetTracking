@@ -14,66 +14,63 @@ require_once('common.php');
 function renderTransactionList(int $accountId): string
 {
     global $conn;
-
-
+    
+    
     // Common vars
-    $plannedTotal = 0;
-    $pendingTotal = 0;
+    $plannedTotal   = 0;
+    $pendingTotal   = 0;
     $processedTotal = 0;
-    $amountTotal = 0;
-
-
+    $amountTotal    = 0;
+    
+    
     // Fetch and compile data
     $account = $conn->fetchAssociative(
         "
             SELECT `name`
             FROM `accounts`
             WHERE `id` = :id;
-        ",
-        [
+        ", [
             "id" => $accountId,
         ]
     );
-
+    
     $transactions = $conn->fetchAllAssociative(
         "
             SELECT *
             FROM `transactions`
             WHERE `account` = :account;
-        ",
-        [
+        ", [
             "account" => $accountId,
         ]
     );
-
+    
     $transfers = $conn->fetchAllAssociative(
         "
             SELECT *
             FROM `transactions`
             WHERE `dest_account` = :dest_account;
-        ",
-        [
+        ", [
             "dest_account" => $accountId,
         ]
     );
-
+    
     foreach ($transfers as $transfer) {
         $transfer["amount"] = -$transfer["amount"];
-        $transactions[] = $transfer;
+        $transactions[]     = $transfer;
     }
-
+    
     foreach ($transactions as $key => $transaction) {
-        $transaction["status"] = TransactionStatus::from($transaction["status"]);
-        $transaction['planned'] = $transaction['status'] == TransactionStatus::Planned ? $transaction['amount'] : 0;
-        $transaction['pending'] = $transaction['status'] == TransactionStatus::Pending ? $transaction['amount'] : 0;
+        $transaction["status"]    = TransactionStatus::from($transaction["status"]);
+        $transaction['planned']   = $transaction['status'] == TransactionStatus::Planned ? $transaction['amount'] : 0;
+        $transaction['pending']   = $transaction['status'] == TransactionStatus::Pending ? $transaction['amount'] : 0;
         $transaction['processed'] = $transaction['status'] == TransactionStatus::Processed ? $transaction['amount'] : 0;
-        $plannedTotal += $transaction['planned'];
-        $pendingTotal += $transaction['pending'];
-        $processedTotal += $transaction['processed'];
-        $amountTotal += $transaction["amount"];
-        $transactions[$key] = $transaction;
+        $plannedTotal             += $transaction['planned'];
+        $pendingTotal             += $transaction['pending'];
+        $processedTotal           += $transaction['processed'];
+        $amountTotal              += $transaction["amount"];
+        $transactions[$key]       = $transaction;
     }
-
+    
     // Default Sort: Date, Destination
     usort($transactions, function (array $a, array $b) {
         if ($a['date'] < $b['date']) {
@@ -90,8 +87,8 @@ function renderTransactionList(int $accountId): string
         }
         return 0;
     });
-
-
+    
+    
     // Render HTML
     $finalBody = "
         <h2>Transactions for {$account["name"]}</h2>

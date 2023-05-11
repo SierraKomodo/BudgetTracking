@@ -21,8 +21,11 @@ class Form
     protected string $currentSection;
 
 
-    public function __construct(string $postTarget, string $pageTarget = "summary", string $defaultSection = "Default Form Section")
-    {
+    public function __construct(
+        string $postTarget,
+        string $pageTarget = "summary",
+        string $defaultSection = "Default Form Section"
+    ) {
         $this->postTarget = $postTarget;
         $this->pageTarget = $pageTarget;
         $this->currentSection = $defaultSection;

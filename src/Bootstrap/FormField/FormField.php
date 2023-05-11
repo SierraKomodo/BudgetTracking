@@ -7,23 +7,18 @@ namespace SierraKomodo\BudgetTracking\Bootstrap\FormField;
  */
 abstract class FormField
 {
+    /** @var string $label The field's label. */
+    protected string $label;
+    /** @var string[] $attributes Map of HTML attributes applied to the field. */
+    protected array $attributes = [];
+    /** @var null|string $defaultValue If set, the field's default value will be this on load. */
+    protected ?string $defaultValue = null;
+    /** @var null|string $prependText If set, the field will have prepended text with the contents. */
+    protected ?string $prependText = null;
     /** @var string $id The field's internal ID key. */
     private string $id;
 
-    /** @var string $label The field's label. */
-    protected string $label;
-
-    /** @var string[] $attributes Map of HTML attributes applied to the field. */
-    protected array $attributes = [];
-
-    /** @var null|string $defaultValue If set, the field's default value will be this on load. */
-    protected ?string $defaultValue = null;
-
-    /** @var null|string $prependText If set, the field will have prepended text with the contents. */
-    protected ?string $prependText = null;
-
-
-    public function __construct(string $id, string $label, bool $required = FALSE)
+    public function __construct(string $id, string $label, bool $required = false)
     {
         $this->setId($id);
         $this->setLabel($label);
@@ -32,29 +27,10 @@ abstract class FormField
         }
     }
 
-
-    /**
-     * Handles generating the input for the form field.
-     *
-     * @return string The rendered HTML input.
-     */
-    abstract protected function _renderInput(): string;
-
-
-    /**
-     * Generates a string of HTML formatted attributes for the form field.
-     *
-     * @return string The rendered attribute string.
-     */
-    protected function _renderAttributes(): string
+    public function setAttribute(string $attribute, string $value = "true"): void
     {
-        $renderedAttributes = [];
-        foreach ($this->getAttributes() as $attribute => $value) {
-            $renderedAttributes[] = "{$attribute}='{$value}'";
-        }
-        return implode(" ", $renderedAttributes);
+        $this->attributes[$attribute] = $value;
     }
-
 
     /**
      * Renders the form field as an HTML `form-group` block.
@@ -84,11 +60,42 @@ abstract class FormField
         ";
     }
 
-
-    public function setAttribute(string $attribute, string $value = "true"): void
+    public function getPrependText(): ?string
     {
-        $this->attributes[$attribute] = $value;
+        return $this->prependText;
     }
+
+    public function setPrependText(string $prependText): void
+    {
+        $this->prependText = $prependText;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): void
+    {
+        $this->label = $label;
+    }
+
+    /**
+     * Handles generating the input for the form field.
+     *
+     * @return string The rendered HTML input.
+     */
+    abstract protected function _renderInput(): string;
 
     public function clearAttribute(string $attribute): void
     {
@@ -109,29 +116,9 @@ abstract class FormField
         return $this->attributes[$attribute];
     }
 
-    public function getAttributes(): array
+    public function getDefaultValue(): ?string
     {
-        return $this->attributes;
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->label;
+        return $this->defaultValue;
     }
 
     public function setDefaultValue(string $defaultValue): void
@@ -139,18 +126,22 @@ abstract class FormField
         $this->defaultValue = $defaultValue;
     }
 
-    public function getDefaultValue(): ?string
+    /**
+     * Generates a string of HTML formatted attributes for the form field.
+     *
+     * @return string The rendered attribute string.
+     */
+    protected function _renderAttributes(): string
     {
-        return $this->defaultValue;
+        $renderedAttributes = [];
+        foreach ($this->getAttributes() as $attribute => $value) {
+            $renderedAttributes[] = "{$attribute}='{$value}'";
+        }
+        return implode(" ", $renderedAttributes);
     }
 
-    public function setPrependText(string $prependText): void
+    public function getAttributes(): array
     {
-        $this->prependText = $prependText;
-    }
-
-    public function getPrependText(): ?string
-    {
-        return $this->prependText;
+        return $this->attributes;
     }
 }

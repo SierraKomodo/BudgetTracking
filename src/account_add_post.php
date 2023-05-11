@@ -43,12 +43,14 @@ if (!$result) {
 
 // Insert credit account
 if ($_POST["account_type"] == "Credit") {
-    $account = $conn->fetchAssociative("
+    $account = $conn->fetchAssociative(
+        "
         SELECT *
         FROM `accounts`
         ORDER BY `id` DESC
         LIMIT 1;
-    ");
+    "
+    );
     $result = $conn->executeStatement(
         "
             INSERT INTO `accounts_credit` (`id`, `limit`, `minimum_payment`, `rewards`)
@@ -70,7 +72,11 @@ if ($_POST["account_type"] == "Credit") {
                 "id" => $account["id"],
             ]
         );
-        $alert = new Alert("Add Account", "Adding credit stage for account {$_POST["name"]} failed.", BootstrapColor::Danger);
+        $alert = new Alert(
+            "Add Account",
+            "Adding credit stage for account {$_POST["name"]} failed.",
+            BootstrapColor::Danger
+        );
         $htmlOut .= $alert->render();
         $_GET["page"] = "account/add";
         return;
