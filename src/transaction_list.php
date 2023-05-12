@@ -7,8 +7,6 @@ use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 use SierraKomodo\BudgetTracking\Model\Account;
 
-require_once(__DIR__ . '/common.php');
-
 
 function renderTransactionList(int $accountId): string
 {
@@ -34,18 +32,20 @@ function renderTransactionList(int $accountId): string
             'date' => $transaction->getDate()->format('Y-m-d'),
             'destination' => $transaction->getDestination(),
             'desc' => $transaction->getDesc(),
-            'expected' => numberToAccounting($transaction->getAmount()),
+            'expected' => Common::numberToAccounting($transaction->getAmount()),
         ];
         $totalDataRow['expected'] += $transaction->getAmount();
         foreach (TransactionStatus::cases() as $transactionStatus) {
             if ($transactionStatus == $transaction->getStatus()) {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting(
+                $dataRow[$transactionStatus->toKey()]
+                    = Common::numberToAccounting(
                     $transaction->getAmount()
                 );
                 $totalDataRow[$transactionStatus->toKey()]
                     += $transaction->getAmount();
             } else {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
+                $dataRow[$transactionStatus->toKey()]
+                    = Common::numberToAccounting(0);
             }
         }
         $tableDataRows[] = $dataRow;
@@ -56,24 +56,26 @@ function renderTransactionList(int $accountId): string
             'date' => $transfer->getDate()->format('Y-m-d'),
             'destination' => $transfer->getDestination(),
             'desc' => $transfer->getDesc(),
-            'expected' => numberToAccounting(-$transfer->getAmount()),
+            'expected' => Common::numberToAccounting(-$transfer->getAmount()),
         ];
         $totalDataRow['expected'] -= $transfer->getAmount();
         foreach (TransactionStatus::cases() as $transactionStatus) {
             if ($transactionStatus == $transfer->getStatus()) {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting(
+                $dataRow[$transactionStatus->toKey()]
+                    = Common::numberToAccounting(
                     -$transfer->getAmount()
                 );
                 $totalDataRow[$transactionStatus->toKey()]
                     -= $transfer->getAmount();
             } else {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
+                $dataRow[$transactionStatus->toKey()]
+                    = Common::numberToAccounting(0);
             }
         }
         $tableDataRows[] = $dataRow;
     }
     foreach ($totalDataRow as $key => $value) {
-        $totalDataRow[$key] = numberToAccounting($value);
+        $totalDataRow[$key] = Common::numberToAccounting($value);
     }
 
 

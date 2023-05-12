@@ -9,8 +9,6 @@ use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 use SierraKomodo\BudgetTracking\Model\Account;
 
-require_once(__DIR__ . '/common.php');
-
 
 function renderAccountList(): string
 {
@@ -33,14 +31,18 @@ function renderAccountList(): string
         $tableDataRows[] = [
             'name' => $account->getName(),
             'type' => $account->getAccountType()->value,
-            'balance' => numberToAccounting($balance),
-            'expected' => numberToAccounting($expected),
+            'balance' => Common::numberToAccounting($balance),
+            'expected' => Common::numberToAccounting($expected),
         ];
         $totalDataRow['balance'] += $balance;
         $totalDataRow['expected'] += $expected;
     }
-    $totalDataRow['balance'] = numberToAccounting($totalDataRow['balance']);
-    $totalDataRow['expected'] = numberToAccounting($totalDataRow['expected']);
+    $totalDataRow['balance'] = Common::numberToAccounting(
+        $totalDataRow['balance']
+    );
+    $totalDataRow['expected'] = Common::numberToAccounting(
+        $totalDataRow['expected']
+    );
 
 
     // Default data sorting - name
