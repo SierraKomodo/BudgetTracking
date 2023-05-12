@@ -22,12 +22,15 @@ class Alert
     /**
      * Alert constructor.
      *
-     * @param string $title Alert's title.
-     * @param string $content Alert's content.
+     * @param string         $title Alert's title.
+     * @param string         $content Alert's content.
      * @param BootstrapColor $color Alert's CSS color class.
      */
-    public function __construct(string $title, string $content, BootstrapColor $color = BootstrapColor::Primary)
-    {
+    public function __construct(
+        string $title,
+        string $content,
+        BootstrapColor $color = BootstrapColor::Primary
+    ) {
         $this->setTitle($title);
         $this->setContent($content);
         $this->setColor($color);

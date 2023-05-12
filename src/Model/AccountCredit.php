@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use JetBrains\PhpStorm\Pure;
 
@@ -69,6 +68,7 @@ class AccountCredit
      * Sets {@link self::$limit}.
      *
      * @param float $limit
+     *
      * @return void
      */
     public function setLimit(float $limit): void
@@ -92,6 +92,7 @@ class AccountCredit
      * Sets {@link self::$minimumPayment}.
      *
      * @param ?float $minimumPayment
+     *
      * @return void
      */
     public function setMinimumPayment(?float $minimumPayment = null): void
@@ -115,6 +116,7 @@ class AccountCredit
      * Sets {@link self::$rewards}.
      *
      * @param ?float $rewards
+     *
      * @return void
      */
     public function setRewards(?float $rewards): void

@@ -25,7 +25,9 @@ class EntityManagerFactory
     public static function getEntityManager(): EntityManagerInterface
     {
         if (empty(self::$entityManager)) {
-            $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/../Model']);
+            $config = ORMSetup::createAttributeMetadataConfiguration(
+                [__DIR__ . '/../Model']
+            );
             $config->setProxyDir(__DIR__ . '/../Proxy');
             $config->setProxyNamespace('SierraKomodo\\BudgetTracking\\Proxy');
             $conn = DatabaseConnectionFactory::getConnection($config);

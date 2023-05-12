@@ -44,7 +44,7 @@ function renderAccountList(): string
 
 
     // Default data sorting - name
-    usort($tableDataRows, function(array $a, array $b) {
+    usort($tableDataRows, function (array $a, array $b) {
         if ($a['name'] < $b['name']) {
             return -1;
         }

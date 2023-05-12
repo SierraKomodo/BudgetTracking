@@ -18,8 +18,11 @@ abstract class FormField
     /** @var string $id The field's internal ID key. */
     private string $id;
 
-    public function __construct(string $id, string $label, bool $required = false)
-    {
+    public function __construct(
+        string $id,
+        string $label,
+        bool $required = false
+    ) {
         $this->setId($id);
         $this->setLabel($label);
         if ($required) {
@@ -27,8 +30,10 @@ abstract class FormField
         }
     }
 
-    public function setAttribute(string $attribute, string $value = "true"): void
-    {
+    public function setAttribute(
+        string $attribute,
+        string $value = "true"
+    ): void {
         $this->attributes[$attribute] = $value;
     }
 
@@ -106,6 +111,7 @@ abstract class FormField
      * Fetches the value of the given attribute.
      *
      * @param string $attribute
+     *
      * @return string|null
      */
     public function getAttribute(string $attribute): ?string

@@ -9,7 +9,8 @@ class InputNumber extends Input
 {
     protected string $inputType = "number";
 
-    protected array $attributes = [
-        "placeholder" => "0",
-    ];
+    protected array $attributes
+        = [
+            "placeholder" => "0",
+        ];
 }

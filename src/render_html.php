@@ -5,6 +5,7 @@ namespace SierraKomodo\BudgetTracking;
 
 /**
  * @param string $body
+ *
  * @return string
  */
 function renderHtml(string $body): string

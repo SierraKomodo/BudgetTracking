@@ -29,7 +29,8 @@ function renderTransactionList(int $accountId): string
     $account = $entityManager->getRepository(Account::class)->find($accountId);
     foreach ($account->getTransactions() as $transaction) {
         $dataRow = [
-            'status-class' => $transaction->getStatus()->toBootstrapColor()->value,
+            'status-class' => $transaction->getStatus()->toBootstrapColor(
+            )->value,
             'date' => $transaction->getDate()->format('Y-m-d'),
             'destination' => $transaction->getDestination(),
             'desc' => $transaction->getDesc(),
@@ -38,8 +39,11 @@ function renderTransactionList(int $accountId): string
         $totalDataRow['expected'] += $transaction->getAmount();
         foreach (TransactionStatus::cases() as $transactionStatus) {
             if ($transactionStatus == $transaction->getStatus()) {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting($transaction->getAmount());
-                $totalDataRow[$transactionStatus->toKey()] += $transaction->getAmount();
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting(
+                    $transaction->getAmount()
+                );
+                $totalDataRow[$transactionStatus->toKey()]
+                    += $transaction->getAmount();
             } else {
                 $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
             }
@@ -57,8 +61,11 @@ function renderTransactionList(int $accountId): string
         $totalDataRow['expected'] -= $transfer->getAmount();
         foreach (TransactionStatus::cases() as $transactionStatus) {
             if ($transactionStatus == $transfer->getStatus()) {
-                $dataRow[$transactionStatus->toKey()] = numberToAccounting(-$transfer->getAmount());
-                $totalDataRow[$transactionStatus->toKey()] -= $transfer->getAmount();
+                $dataRow[$transactionStatus->toKey()] = numberToAccounting(
+                    -$transfer->getAmount()
+                );
+                $totalDataRow[$transactionStatus->toKey()]
+                    -= $transfer->getAmount();
             } else {
                 $dataRow[$transactionStatus->toKey()] = numberToAccounting(0);
             }

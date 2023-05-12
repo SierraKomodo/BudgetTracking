@@ -12,9 +12,10 @@ trait EnumToHtmlForm
     /**
      * Creates an OptionsSelect form field using the enumeration's possible values as options.
      *
-     * @param string $id Field ID.
-     * @param string $label Field label.
-     * @param bool $required Whether the field is required.
+     * @param string $id       Field ID.
+     * @param string $label    Field label.
+     * @param bool   $required Whether the field is required.
+     *
      * @return OptionsSelect The created OptionsSelect object.
      */
     public static function toOptionsSelect(

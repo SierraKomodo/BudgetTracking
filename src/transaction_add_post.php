@@ -23,7 +23,9 @@ $alert->setColor(BootstrapColor::Danger);
 
 // Validate data
 if (!$_POST["dest_account"] && !$_POST["destination"]) {
-    $alert->setContent('Either destination or destination account is required.');
+    $alert->setContent(
+        'Either destination or destination account is required.'
+    );
     $_GET["page"] = "transaction/add";
     return $alert->render();
 }
@@ -42,18 +44,24 @@ try {
 try {
     $date = new DateTimeImmutable($_POST['date']);
 } catch (Exception) {
-    $alert->setContent('Failed to initialize the datetime field. Your date may be invalid.');
+    $alert->setContent(
+        'Failed to initialize the datetime field. Your date may be invalid.'
+    );
     $_GET['page'] = 'transaction/add';
     return $alert->render();
 }
 
 // Account
-$account = $entityManager->getRepository(Account::class)->find($_POST['account']);
+$account = $entityManager->getRepository(Account::class)->find(
+    $_POST['account']
+);
 
 // Destination Account
 $destAccount = null;
 if ($_POST["dest_account"]) {
-    $destAccount = $entityManager->getRepository(Account::class)->find($_POST['dest_account']);
+    $destAccount = $entityManager->getRepository(Account::class)->find(
+        $_POST['dest_account']
+    );
 }
 
 // Status
