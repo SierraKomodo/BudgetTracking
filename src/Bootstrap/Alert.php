@@ -22,9 +22,9 @@ class Alert
     /**
      * Alert constructor.
      *
-     * @param string         $title Alert's title.
+     * @param string         $title   Alert's title.
      * @param string         $content Alert's content.
-     * @param BootstrapColor $color Alert's CSS color class.
+     * @param BootstrapColor $color   Alert's CSS color class.
      */
     public function __construct(
         string $title,

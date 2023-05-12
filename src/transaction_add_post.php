@@ -14,9 +14,6 @@ use SierraKomodo\BudgetTracking\Model\Account;
 use SierraKomodo\BudgetTracking\Model\Transaction;
 
 
-require_once(__DIR__ . '/common.php');
-
-
 $alert = new Alert('Add Transaction', 'No action result.');
 $alert->setColor(BootstrapColor::Danger);
 
@@ -96,7 +93,7 @@ try {
 
 // Result
 $alert->setContent(
-    "Successfully added transaction amount " . numberToAccounting(
+    "Successfully added transaction amount " . Common::numberToAccounting(
         $transaction->getAmount()
     ) . " to account {$account->getName()}."
 );

@@ -11,8 +11,6 @@ use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 use SierraKomodo\BudgetTracking\Model\Account;
 
-require_once(__DIR__ . '/common.php');
-
 
 /**
  * @return string
@@ -74,8 +72,8 @@ function renderSummary(): string
                 $overviewTableDataRows['balance'] += $transactionTotal;
                 $cashTableDataRows[] = [
                     'name' => $account->getName(),
-                    'balance' => numberToAccounting($processedTotal),
-                    'expected' => numberToAccounting($transactionTotal),
+                    'balance' => Common::numberToAccounting($processedTotal),
+                    'expected' => Common::numberToAccounting($transactionTotal),
                 ];
                 $cashTotalDataRow['balance'] += $processedTotal;
                 $cashTotalDataRow['expected'] += $transactionTotal;
@@ -91,14 +89,14 @@ function renderSummary(): string
                 $overviewTableDataRows['balance'] += $transactionTotal;
                 $creditTableDataRows[] = [
                     'name' => $account->getName(),
-                    'balance' => numberToAccounting($processedTotal),
-                    'expected' => numberToAccounting($transactionTotal),
-                    'limit' => numberToAccounting($limit),
-                    'usage' => numberToPercent($usagePercentage),
-                    'available' => numberToAccounting(
+                    'balance' => Common::numberToAccounting($processedTotal),
+                    'expected' => Common::numberToAccounting($transactionTotal),
+                    'limit' => Common::numberToAccounting($limit),
+                    'usage' => Common::numberToPercent($usagePercentage),
+                    'available' => Common::numberToAccounting(
                         $limit + $transactionTotal
                     ),
-                    'rewards' => numberToAccounting($rewards),
+                    'rewards' => Common::numberToAccounting($rewards),
                 ];
                 $creditTotalDataRow['balance'] += $processedTotal;
                 $creditTotalDataRow['expected'] += $transactionTotal;
@@ -113,8 +111,8 @@ function renderSummary(): string
                 $overviewTableDataRows['balance'] -= $transactionTotal;
                 $reserveTableDataRows[] = [
                     'name' => $account->getName(),
-                    'balance' => numberToAccounting($processedTotal),
-                    'expected' => numberToAccounting($transactionTotal),
+                    'balance' => Common::numberToAccounting($processedTotal),
+                    'expected' => Common::numberToAccounting($transactionTotal),
                 ];
                 $reserveTotalDataRow['balance'] += $processedTotal;
                 $reserveTotalDataRow['expected'] += $transactionTotal;
@@ -124,8 +122,8 @@ function renderSummary(): string
                 // Not included in the overview.
                 $otherTableDataRows[] = [
                     'name' => $account->getName(),
-                    'balance' => numberToAccounting($processedTotal),
-                    'expected' => numberToAccounting($transactionTotal),
+                    'balance' => Common::numberToAccounting($processedTotal),
+                    'expected' => Common::numberToAccounting($transactionTotal),
                 ];
                 $otherTotalDataRow['balance'] += $processedTotal;
                 $otherTotalDataRow['expected'] += $transactionTotal;
@@ -134,26 +132,26 @@ function renderSummary(): string
     }
 
     foreach ($overviewTableDataRows as $key => $value) {
-        $overviewTableDataRows[$key] = numberToAccounting($value);
+        $overviewTableDataRows[$key] = Common::numberToAccounting($value);
     }
     foreach ($cashTotalDataRow as $key => $value) {
-        $cashTotalDataRow[$key] = numberToAccounting($value);
+        $cashTotalDataRow[$key] = Common::numberToAccounting($value);
     }
     if (count($creditTableDataRows) != 0) {
         $creditTotalDataRow['usage'] /= count($creditTableDataRows);
     }
     foreach ($creditTotalDataRow as $key => $value) {
         if ($key == 'usage') {
-            $creditTotalDataRow[$key] = numberToPercent($value);
+            $creditTotalDataRow[$key] = Common::numberToPercent($value);
             continue;
         }
-        $creditTotalDataRow[$key] = numberToAccounting($value);
+        $creditTotalDataRow[$key] = Common::numberToAccounting($value);
     }
     foreach ($reserveTotalDataRow as $key => $value) {
-        $reserveTotalDataRow[$key] = numberToAccounting($value);
+        $reserveTotalDataRow[$key] = Common::numberToAccounting($value);
     }
     foreach ($otherTotalDataRow as $key => $value) {
-        $otherTotalDataRow[$key] = numberToAccounting($value);
+        $otherTotalDataRow[$key] = Common::numberToAccounting($value);
     }
 
 
