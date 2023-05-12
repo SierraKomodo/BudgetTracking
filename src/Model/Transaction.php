@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use JetBrains\PhpStorm\Pure;
 use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
@@ -99,6 +98,7 @@ class Transaction
      * Sets {@link self::date}.
      *
      * @param DateTimeInterface $date
+     *
      * @return void
      */
     public function setDate(DateTimeInterface $date): void
@@ -122,6 +122,7 @@ class Transaction
      * Sets {@link self::$account}.
      *
      * @param Account $account
+     *
      * @return void
      */
     public function setAccount(Account $account): void
@@ -145,6 +146,7 @@ class Transaction
      * Sets {@link self::$destAccount}.
      *
      * @param Account $account
+     *
      * @return void
      */
     public function setDestAccount(Account $account): void
@@ -173,6 +175,7 @@ class Transaction
      * Sets {@link self::$destination}.
      *
      * @param string|null $destination
+     *
      * @return void
      */
     public function setDestination(?string $destination = null): void
@@ -196,6 +199,7 @@ class Transaction
      * Sets {@link self::$desc}.
      *
      * @param string|null $desc
+     *
      * @return void
      */
     public function setDesc(?string $desc = null): void
@@ -219,6 +223,7 @@ class Transaction
      * Sets {@link self::$amount}.
      *
      * @param float $amount
+     *
      * @return void
      */
     public function setAmount(float $amount): void
@@ -242,6 +247,7 @@ class Transaction
      * Sets {@link self::$status}.
      *
      * @param TransactionStatus $status
+     *
      * @return void
      */
     public function setStatus(TransactionStatus $status): void

@@ -2,7 +2,6 @@
 
 namespace SierraKomodo\BudgetTracking;
 
-use SierraKomodo\BudgetTracking\Bootstrap\Alert;
 use SierraKomodo\BudgetTracking\Factory\EntityManagerFactory;
 
 require_once(__DIR__ . '/../src/bootstrap.php');
@@ -22,7 +21,8 @@ if (!empty($_POST) && !empty($_GET['post'])) {
             break;
 
         case "transaction/add":
-            $htmlOut .= require_once(__DIR__ . '/../src/transaction_add_post.php');
+            $htmlOut .= require_once(__DIR__
+                . '/../src/transaction_add_post.php');
             break;
 
         default:

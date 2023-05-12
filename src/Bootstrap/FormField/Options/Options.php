@@ -32,8 +32,9 @@ abstract class Options extends FormField
     /**
      * Adds an item to the field's available options.
      *
-     * @param string $key The internal ID passed through the form.
+     * @param string $key    The internal ID passed through the form.
      * @param string $option The name displayed on the form.
+     *
      * @return void
      */
     public function addOption(string $key, string $option): void

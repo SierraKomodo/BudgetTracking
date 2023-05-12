@@ -8,8 +8,9 @@ class InputMoney extends Input
 
     protected ?string $prependText = "$";
 
-    protected array $attributes = [
-        "placeholder" => "0.00",
-        "step" => ".01",
-    ];
+    protected array $attributes
+        = [
+            "placeholder" => "0.00",
+            "step" => ".01",
+        ];
 }

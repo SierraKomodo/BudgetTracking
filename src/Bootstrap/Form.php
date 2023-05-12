@@ -36,6 +36,7 @@ class Form
      * Adds a form field to the form.
      *
      * @param FormField $newField The field to add.
+     *
      * @return void
      */
     public function addField(FormField $newField): void
@@ -48,6 +49,7 @@ class Form
      * Starts a new section in the form.
      *
      * @param string $section The section header.
+     *
      * @return void
      */
     public function addSection(string $section): void

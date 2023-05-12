@@ -25,6 +25,10 @@
       </formatting-settings>
     </DBN-SQL>
     <PHPCodeStyleSettings>
+      <option name="ALIGN_PHPDOC_PARAM_NAMES" value="true" />
+      <option name="ALIGN_PHPDOC_COMMENTS" value="true" />
+      <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
+      <option name="PHPDOC_BLANK_LINES_AROUND_PARAMETERS" value="true" />
       <option name="BLANK_LINES_BETWEEN_IMPORTS" value="1" />
       <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
       <option name="LOWER_CASE_NULL_CONST" value="true" />
@@ -33,11 +37,14 @@
       <option name="BLANK_LINES_AFTER_OPENING_TAG" value="1" />
       <option name="KEEP_BLANK_LINES_AFTER_LBRACE" value="0" />
       <option name="NEW_LINE_AFTER_PHP_OPENING_TAG" value="true" />
+      <option name="IF_RPAREN_ON_NEXT_LINE" value="true" />
     </PHPCodeStyleSettings>
     <codeStyleSettings language="PHP">
+      <option name="RIGHT_MARGIN" value="80" />
       <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="0" />
       <option name="BLANK_LINES_AFTER_PACKAGE" value="1" />
       <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <option name="ALIGN_MULTILINE_FOR" value="false" />
       <option name="ALIGN_MULTILINE_EXTENDS_LIST" value="true" />
       <option name="CALL_PARAMETERS_WRAP" value="5" />
       <option name="CALL_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
@@ -46,11 +53,19 @@
       <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
       <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
       <option name="EXTENDS_LIST_WRAP" value="5" />
+      <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
+      <option name="BINARY_OPERATION_WRAP" value="1" />
+      <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
+      <option name="TERNARY_OPERATION_WRAP" value="1" />
+      <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
+      <option name="FOR_STATEMENT_WRAP" value="1" />
       <option name="FOR_STATEMENT_LPAREN_ON_NEXT_LINE" value="true" />
       <option name="FOR_STATEMENT_RPAREN_ON_NEXT_LINE" value="true" />
       <option name="ARRAY_INITIALIZER_WRAP" value="5" />
       <option name="ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE" value="true" />
       <option name="ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE" value="true" />
+      <option name="ASSIGNMENT_WRAP" value="1" />
+      <option name="PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE" value="true" />
       <option name="IF_BRACE_FORCE" value="3" />
       <option name="DOWHILE_BRACE_FORCE" value="3" />
       <option name="WHILE_BRACE_FORCE" value="3" />

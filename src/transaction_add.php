@@ -23,10 +23,18 @@ function renderAddTransaction(): string
     $form = new Form("transaction/add", "transaction/add", "Transaction");
     $form->addField(new InputDate("date", "Date", true));
     $form->addField($accountRepository->toOptionsSelect());
-    $form->addField($accountRepository->toOptionsSelect('dest_account', 'Destination Account', false));
+    $form->addField(
+        $accountRepository->toOptionsSelect(
+            'dest_account',
+            'Destination Account',
+            false
+        )
+    );
     $form->addField(new InputText("destination", "Destination"));
     $form->addField(new InputText("desc", "Description"));
     $form->addField(new InputMoney("amount", "Amount", true));
-    $form->addField(TransactionStatus::toOptionsSelect("status", "Status", true));
+    $form->addField(
+        TransactionStatus::toOptionsSelect("status", "Status", true)
+    );
     return $form->render();
 }

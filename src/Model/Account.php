@@ -79,10 +79,11 @@ class Account
      * Calculates and returns the balance of the account for the given status category.
      *
      * @param TransactionStatus $status
+     *
      * @return float
      */
-    #[Pure] public function getTransactionTotal(TransactionStatus $status): float
-    {
+    #[Pure] public function getTransactionTotal(TransactionStatus $status
+    ): float {
         $result = 0;
         foreach ($this->transactions as $transaction) {
             if ($transaction->getStatus() != $status) {
@@ -145,6 +146,7 @@ class Account
      * Sets {@link self::name}.
      *
      * @param string $name
+     *
      * @return void
      */
     public function setName(string $name): void
@@ -168,6 +170,7 @@ class Account
      * Sets {@link self::$desc}.
      *
      * @param string|null $desc
+     *
      * @return void
      */
     public function setDesc(?string $desc = null): void
@@ -191,6 +194,7 @@ class Account
      * Sets {@link self::$accountType}.
      *
      * @param AccountType $accountType
+     *
      * @return void
      */
     public function setAccountType(AccountType $accountType): void
@@ -236,6 +240,7 @@ class Account
      * Sets {@link self::$credit}.
      *
      * @param ?AccountCredit $credit
+     *
      * @return void
      */
     public function setCredit(?AccountCredit $credit = null): void

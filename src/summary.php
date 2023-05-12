@@ -65,7 +65,9 @@ function renderSummary(): string
     $accounts = $entityManager->getRepository(Account::class)->findAll();
     foreach ($accounts as $account) {
         $transactionTotal = $account->getAllTransactionTotal();
-        $processedTotal = $account->getTransactionTotal(TransactionStatus::Processed);
+        $processedTotal = $account->getTransactionTotal(
+            TransactionStatus::Processed
+        );
         switch ($account->getAccountType()) {
             case AccountType::Cash:
                 $overviewTableDataRows['cash'] += $transactionTotal;
@@ -93,7 +95,9 @@ function renderSummary(): string
                     'expected' => numberToAccounting($transactionTotal),
                     'limit' => numberToAccounting($limit),
                     'usage' => numberToPercent($usagePercentage),
-                    'available' => numberToAccounting($limit + $transactionTotal),
+                    'available' => numberToAccounting(
+                        $limit + $transactionTotal
+                    ),
                     'rewards' => numberToAccounting($rewards),
                 ];
                 $creditTotalDataRow['balance'] += $processedTotal;
