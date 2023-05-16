@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SierraKomodo\BudgetTracking\Enum;
 
 use SierraKomodo\BudgetTracking\Enum\Trait\EnumValueToKey;
