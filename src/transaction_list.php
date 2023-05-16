@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace SierraKomodo\BudgetTracking;
 
@@ -120,10 +121,10 @@ function renderTransactionList(int $accountId): string
                 <td>{$tableDataRow["date"]}</td>
                 <td>{$tableDataRow["destination"]}</td>
                 <td>{$tableDataRow["desc"]}</td>
-                <th>{$tableDataRow["planned"]}</th>
-                <th>{$tableDataRow["pending"]}</th>
-                <th>{$tableDataRow["processed"]}</th>
-                <th>{$tableDataRow["expected"]}</th>
+                <td>{$tableDataRow["planned"]}</td>
+                <td>{$tableDataRow["pending"]}</td>
+                <td>{$tableDataRow["processed"]}</td>
+                <td>{$tableDataRow["expected"]}</td>
             </tr>
         ";
     }

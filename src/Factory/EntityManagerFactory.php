@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SierraKomodo\BudgetTracking\Factory;
 
 use Doctrine\DBAL\Exception;
