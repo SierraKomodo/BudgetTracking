@@ -9,8 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
@@ -25,14 +23,8 @@ use SierraKomodo\BudgetTracking\Repository\AccountRepository;
  */
 #[Entity(repositoryClass: AccountRepository::class)]
 #[Table(name: 'accounts')]
-class Account
+class Account extends AbstractModel
 {
-    /** @var int $id Primary key. */
-    #[Column(type: Types::INTEGER)]
-    #[Id]
-    #[GeneratedValue]
-    private int $id;
-
     /** @var string $name The account's name. */
     #[Column(type: Types::TEXT, length: 255)]
     private string $name;
@@ -121,17 +113,6 @@ class Account
 
 
     // Getters and Setters
-
-    /**
-     * Fetches {@link self::$id}.
-     *
-     * @return int
-     */
-    #[Pure] public function getId(): int
-    {
-        return $this->id;
-    }
-
 
     /**
      * Fetches {@link self::name}.

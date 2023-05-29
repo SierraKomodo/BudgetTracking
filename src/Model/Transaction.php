@@ -9,8 +9,6 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
@@ -22,16 +20,9 @@ use SierraKomodo\BudgetTracking\Enum\TransactionStatus;
  */
 #[Entity]
 #[Table(name: 'transactions')]
-class Transaction
+class Transaction extends AbstractModel
 {
     // Properties
-
-    /** @var int $id Primary key. */
-    #[Column(type: Types::INTEGER)]
-    #[Id]
-    #[GeneratedValue]
-    private int $id;
-
 
     /** @var DateTimeImmutable $date Date of the transaction. */
     #[Column(type: Types::DATE_IMMUTABLE)]
@@ -68,19 +59,6 @@ class Transaction
     /** @var TransactionStatus $status Transaction's status. */
     #[Column(type: Types::TEXT, length: 255, enumType: TransactionStatus::class)]
     private TransactionStatus $status;
-
-
-    // Getters and Setters
-
-    /**
-     * Fetches {@link self::$id}.
-     *
-     * @return int
-     */
-    #[Pure] public function getId(): int
-    {
-        return $this->id;
-    }
 
 
     /**

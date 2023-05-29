@@ -7,8 +7,6 @@ namespace SierraKomodo\BudgetTracking\Model;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use JetBrains\PhpStorm\Pure;
 
@@ -17,15 +15,9 @@ use JetBrains\PhpStorm\Pure;
  */
 #[Entity]
 #[Table(name: 'accounts_credit')]
-class AccountCredit
+class AccountCredit extends AbstractModel
 {
     // Properties
-    /** @var int $id Primary key. */
-    #[Column(type: Types::INTEGER)]
-    #[Id]
-    #[GeneratedValue]
-    private int $id;
-
 
     /** @var float $limit Credit account limit. */
     #[Column(name: '`limit`', type: Types::DECIMAL, precision: 10, scale: 2)]
@@ -43,17 +35,6 @@ class AccountCredit
 
 
     // Getters and Setters
-
-    /**
-     * Fetches {@link self::$id}.
-     *
-     * @return int
-     */
-    #[Pure] public function getId(): int
-    {
-        return $this->id;
-    }
-
 
     /**
      * Fetches {@link self::$limit}
