@@ -74,6 +74,7 @@ function renderSummary(): string
                     'name' => $account->getName(),
                     'balance' => Common::numberToAccounting($processedTotal),
                     'expected' => Common::numberToAccounting($transactionTotal),
+                    'control' => $account->renderControlButtons(),
                 ];
                 $cashTotalDataRow['balance'] += $processedTotal;
                 $cashTotalDataRow['expected'] += $transactionTotal;
@@ -97,6 +98,7 @@ function renderSummary(): string
                         $limit + $transactionTotal
                     ),
                     'rewards' => Common::numberToAccounting($rewards),
+                    'control' => $account->renderControlButtons(),
                 ];
                 $creditTotalDataRow['balance'] += $processedTotal;
                 $creditTotalDataRow['expected'] += $transactionTotal;
@@ -113,6 +115,7 @@ function renderSummary(): string
                     'name' => $account->getName(),
                     'balance' => Common::numberToAccounting($processedTotal),
                     'expected' => Common::numberToAccounting($transactionTotal),
+                    'control' => $account->renderControlButtons(),
                 ];
                 $reserveTotalDataRow['balance'] += $processedTotal;
                 $reserveTotalDataRow['expected'] += $transactionTotal;
@@ -124,6 +127,7 @@ function renderSummary(): string
                     'name' => $account->getName(),
                     'balance' => Common::numberToAccounting($processedTotal),
                     'expected' => Common::numberToAccounting($transactionTotal),
+                    'control' => $account->renderControlButtons(),
                 ];
                 $otherTotalDataRow['balance'] += $processedTotal;
                 $otherTotalDataRow['expected'] += $transactionTotal;
@@ -187,6 +191,7 @@ function renderSummary(): string
                     <th scope='col'>Name</th>
                     <th scope='col'>Balance</th>
                     <th scope='col'>Expected</th>
+                    <th scope='col'>Control</th>
                 </tr>
             </thead>
             <tbody>
@@ -197,6 +202,7 @@ function renderSummary(): string
                 <th scope='row'>{$dataRow['name']}</th>
                 <td>{$dataRow['balance']}</td>
                 <td>{$dataRow['expected']}</td>
+                <td>{$dataRow['control']}</td>
             </tr>
         ";
     }
@@ -207,6 +213,7 @@ function renderSummary(): string
                     <th scope='row'>Total</th>
                     <td>{$cashTotalDataRow['balance']}</td>
                     <td>{$cashTotalDataRow['expected']}</td>
+                    <td>&nbsp;</td>
                 </tr>
             </tfoot>
         </table>
@@ -223,6 +230,7 @@ function renderSummary(): string
                     <th scope='col'>Usage</th>
                     <th scope='col'>Available</th>
                     <th scope='col'>Rewards</th>
+                    <th scope='col'>Control</th>
                 </tr>
             </thead>
             <tbody>
@@ -237,6 +245,7 @@ function renderSummary(): string
                 <td>{$dataRow['usage']}</td>
                 <td>{$dataRow['available']}</td>
                 <td>{$dataRow['rewards']}</td>
+                <td>{$dataRow['control']}</td>
             </tr>
         ";
     }
@@ -251,6 +260,7 @@ function renderSummary(): string
                     <td>{$creditTotalDataRow['usage']}</td>
                     <td>{$creditTotalDataRow['available']}</td>
                     <td>{$creditTotalDataRow['rewards']}</td>
+                    <td>&nbsp;</td>
                 </tr>
             </tfoot>
         </table>
@@ -263,6 +273,7 @@ function renderSummary(): string
                     <th scope='col'>Name</th>
                     <th scope='col'>Balance</th>
                     <th scope='col'>Expected</th>
+                    <th scope='col'>Control</th>
                 </tr>
             </thead>
             <tbody>
@@ -273,6 +284,7 @@ function renderSummary(): string
                 <th scope='row'>{$dataRow['name']}</th>
                 <td>{$dataRow['balance']}</td>
                 <td>{$dataRow['expected']}</td>
+                <td>{$dataRow['control']}</td>
             </tr>
         ";
     }
@@ -283,6 +295,7 @@ function renderSummary(): string
                     <th scope='row'>Total</th>
                     <td>{$reserveTotalDataRow['balance']}</td>
                     <td>{$reserveTotalDataRow['expected']}</td>
+                    <td>&nbsp;</td>
                 </tr>
             </tfoot>
         </table>
@@ -295,6 +308,7 @@ function renderSummary(): string
                     <th scope='col'>Name</th>
                     <th scope='col'>Balance</th>
                     <th scope='col'>Expected</th>
+                    <th scope='col'>Control</th>
                 </tr>
             </thead>
             <tbody>
@@ -305,6 +319,7 @@ function renderSummary(): string
                 <th scope='row'>{$dataRow['name']}</th>
                 <td>{$dataRow['balance']}</td>
                 <td>{$dataRow['expected']}</td>
+                <td>{$dataRow['control']}</td>
             </tr>
         ";
     }
@@ -315,6 +330,7 @@ function renderSummary(): string
                     <th scope='row'>Total</th>
                     <td>{$otherTotalDataRow['balance']}</td>
                     <td>{$otherTotalDataRow['expected']}</td>
+                    <td>&nbsp;</td>
                 </tr>
             </tfoot>
         </table>
