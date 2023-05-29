@@ -45,13 +45,13 @@ class Account
     #[Column(name: 'account_type', type: Types::TEXT, length: 255, enumType: AccountType::class)]
     private AccountType $accountType;
 
-    /** @var ArrayCollection|Transaction[] $transactions {@link Transaction} instances with this account as {@link Transaction::$account}. */
+    /** @var Collection|Transaction[] $transactions {@link Transaction} instances with this account as {@link Transaction::$account}. */
     #[OneToMany(mappedBy: 'account', targetEntity: Transaction::class)]
-    private array|ArrayCollection $transactions;
+    private array|Collection $transactions;
 
-    /** @var ArrayCollection|Transaction[] $transfers {@link Transaction} instances with this account as {@link Transaction::$destAccount}. */
+    /** @var Collection|Transaction[] $transfers {@link Transaction} instances with this account as {@link Transaction::$destAccount}. */
     #[OneToMany(mappedBy: 'destAccount', targetEntity: Transaction::class)]
-    private array|ArrayCollection $transfers;
+    private array|Collection $transfers;
 
 
     /** @var ?AccountCredit Linked {@link AccountCredit}. */
