@@ -60,7 +60,7 @@ switch ($_GET["page"]) {
 
     case "transaction/list":
         require_once(__DIR__ . '/../src/transaction_list.php');
-        $htmlOut .= renderTransactionList($_GET["account"]);
+        $htmlOut .= renderTransactionList((int)$_GET["account"]);
         break;
 
     default:

@@ -80,7 +80,7 @@ if ($_POST['destination']) {
 if ($_POST['desc']) {
     $transaction->setDesc($_POST['desc']);
 }
-$transaction->setAmount($_POST['amount']);
+$transaction->setAmount((float)$_POST['amount']);
 $transaction->setStatus($status);
 $entityManager->persist($transaction);
 
