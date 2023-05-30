@@ -52,12 +52,12 @@ $entityManager->persist($account);
 // Insert credit account
 if ($accountType == AccountType::Credit) {
     $credit = new AccountCredit();
-    $credit->setLimit($_POST['limit']);
+    $credit->setLimit((float)$_POST['limit']);
     if ($_POST['minimum_payment']) {
-        $credit->setMinimumPayment($_POST['minimum_payment']);
+        $credit->setMinimumPayment((float)$_POST['minimum_payment']);
     }
     if ($_POST['rewards']) {
-        $credit->setMinimumPayment($_POST['rewards']);
+        $credit->setMinimumPayment((float)$_POST['rewards']);
     }
     $account->setCredit($credit);
     $entityManager->persist($credit);
