@@ -21,5 +21,8 @@
       "role": "Developer"
     }
   ],
-  "license": "AGPL-3.0-or-later"
+  "license": "AGPL-3.0-or-later",
+  "require-dev": {
+    "phpunit/phpunit": "^10.2"
+  }
 }

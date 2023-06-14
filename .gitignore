@@ -3,8 +3,8 @@
 /src/Proxy/
 
 
-# Created by https://www.toptal.com/developers/gitignore/api/composer,dotenv
-# Edit at https://www.toptal.com/developers/gitignore?templates=composer,dotenv
+# Created by https://www.toptal.com/developers/gitignore/api/dotenv,composer,phpunit
+# Edit at https://www.toptal.com/developers/gitignore?templates=dotenv,composer,phpunit
 
 ### Composer ###
 composer.phar
@@ -17,4 +17,19 @@ composer.phar
 ### dotenv ###
 .env
 
-# End of https://www.toptal.com/developers/gitignore/api/composer,dotenv
+### PHPUnit ###
+# Covers PHPUnit
+# Reference: https://phpunit.de/
+
+# Generated files
+.phpunit.result.cache
+.phpunit.cache
+
+# PHPUnit
+/app/phpunit.xml
+/phpunit.xml
+
+# Build data
+/build/
+
+# End of https://www.toptal.com/developers/gitignore/api/dotenv,composer,phpunit
