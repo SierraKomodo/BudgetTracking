@@ -53,14 +53,19 @@ switch ($_GET["page"]) {
         $htmlOut .= renderAccountList();
         break;
 
+    case 'account/view':
+        if (!isset($_GET['account'])) {
+            require_once(__DIR__ . '/../src/404.php');
+            $htmlOut .= render404();
+            break;
+        }
+        require_once(__DIR__ . '/../src/account_view.php');
+        $htmlOut .= renderAccountView((int)$_GET['account']);
+        break;
+
     case "transaction/add":
         require_once(__DIR__ . '/../src/transaction_add.php');
         $htmlOut .= renderAddTransaction();
-        break;
-
-    case "transaction/list":
-        require_once(__DIR__ . '/../src/transaction_list.php');
-        $htmlOut .= renderTransactionList((int)$_GET["account"]);
         break;
 
     default:
