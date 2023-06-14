@@ -1,0 +1,4 @@
+php:
+  - '**/*.php'
+  - 'composer.lock'
+  - 'phpunit.xml'
